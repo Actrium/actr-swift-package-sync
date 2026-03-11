@@ -3,9 +3,6 @@ name: Swift Manual Build
 on:
   workflow_dispatch:
 
-env:
-  PROTOC_VERSION: "29.3"
-
 permissions:
   contents: read
 
@@ -26,9 +23,9 @@ jobs:
           targets: aarch64-apple-ios,aarch64-apple-ios-sim,aarch64-apple-darwin
       - uses: Swatinem/rust-cache@v2
       - name: Install protoc
-        uses: taiki-e/install-action@v2
+        uses: arduino/setup-protoc@v3
         with:
-          tool: protoc@${{ env.PROTOC_VERSION }}
+          repo-token: ${{ github.token }}
       - name: Install UniFFI bindgen
         run: cargo install --locked uniffi --version 0.30.0 --features cli --bin uniffi-bindgen
       - name: Install native dependencies
