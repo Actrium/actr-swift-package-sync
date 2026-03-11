@@ -49,8 +49,8 @@ if [[ ! -d "${FRAMEWORK_DIR}" ]]; then
   exit 1
 fi
 
-rm -rf "${DIST_DIR}"
 mkdir -p "${DIST_DIR}"
+rm -f "${ZIP_PATH}" "${DIST_DIR}/release.txt"
 
 echo "[1/3] Zipping XCFramework -> ${ZIP_PATH}"
 ZIP_SOURCE_PARENT="$(dirname "${FRAMEWORK_DIR}")"

@@ -1,10 +1,10 @@
 {
   "language": "swift",
   "version": "0.2.0",
-  "source_sha": "4b3bd05ce478457d891b713160157aece3c61b0b",
+  "source_sha": "f25f95e463bc1ffe731651c12c9247abbb92469d",
   "source_tag": "release-train-v0.2.0",
   "source_repository": "https://github.com/Actrium/actr",
   "package_sync_owner": "Actrium",
   "package_sync_repo": "actr-swift-package-sync",
-  "generated_at": "2026-03-11T07:33:09.684230+00:00"
+  "generated_at": "2026-03-11T08:20:17.762491+00:00"
 }
