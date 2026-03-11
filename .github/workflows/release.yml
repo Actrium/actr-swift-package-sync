@@ -62,8 +62,8 @@ jobs:
         run: ./build-xcframework.sh
       - name: Build Swift package
         env:
-          ACTR_BINDINGS_PATH: source-checkout/bindings/swift/dist/ActrBindings
-          ACTR_BINARY_PATH: source-checkout/bindings/swift/dist/ActrFFI.xcframework
+          ACTR_BINDINGS_PATH: dist/ActrBindings
+          ACTR_BINARY_PATH: dist/ActrFFI.xcframework
         run: swift build --package-path source-checkout/bindings/swift
       - name: Package XCFramework
         working-directory: source-checkout/bindings/swift
