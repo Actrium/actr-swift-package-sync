@@ -1,0 +1,107 @@
+syntax = "proto2";
+
+package signaling;
+
+import "google/protobuf/timestamp.proto";
+import "actr.proto";
+import "webrtc.proto";
+
+// Thin signaling envelope for WebSocket transport.
+// Classifies flows: Peer->SignalingServer (pre-registration), Actr->SignalingServer, SignalingServer->Actr, and Actr relay.
+message SignalingEnvelope {
+  // Envelope metadata
+  required uint32 envelope_version = 1;          // envelope schema version
+  required string envelope_id = 2;               // unique id for this message
+  optional string reply_for = 3;                 // correlation to a previous envelope
+  required google.protobuf.Timestamp timestamp = 4; // enqueue time (server clock)
+  optional string traceparent = 5;               // W3C trace context header value
+  optional string tracestate = 6;                // W3C trace state header value
+
+  oneof flow {
+    PeerToSignaling peer_to_server = 10;
+    ActrToSignaling actr_to_server = 11;
+    SignalingToActr server_to_actr = 12;
+    ActrRelay actr_relay = 13;
+    actr.ErrorResponse envelope_error = 14; // envelope-level failure (no payload)
+  }
+}
+
+// Signing key lookup (actor queries AIS public key by key_id for offline verification)
+message GetSigningKeyRequest  { required uint32 key_id = 1; }
+message GetSigningKeyResponse { required uint32 key_id = 1; required bytes pubkey = 2; }
+
+// Flow: peer (no ActrId yet) -> SignalingServer (registration only)
+message PeerToSignaling {
+  oneof payload {
+    actr.RegisterRequest register_request = 1;
+  }
+}
+
+// Flow: ActrNode (with ActrId) -> SignalingServer
+message ActrToSignaling {
+  required actr.ActrId source = 1;
+  required actr.AIdCredential credential = 2;
+
+  oneof payload {
+    actr.UnregisterRequest unregister_request = 3;
+    actr.Ping ping = 4;
+
+    // Update AId credential
+    actr.CredentialUpdateRequest credential_update_request = 5;
+
+    // Discovery & selection
+    actr.DiscoveryRequest discovery_request = 10;
+    actr.RouteCandidatesRequest route_candidates_request = 11;
+    actr.GetServiceSpecRequest get_service_spec_request = 12;
+    GetSigningKeyRequest get_signing_key_request = 13;
+
+    // Presence subscription
+    actr.SubscribeActrUpRequest subscribe_actr_up_request = 20;
+    actr.UnsubscribeActrUpRequest unsubscribe_actr_up_request = 21;
+
+    // Error reporting from client
+    actr.ErrorResponse error = 30;
+  }
+}
+
+// Flow: SignalingServer -> Actr
+message SignalingToActr {
+  required actr.ActrId target = 1;
+
+  oneof payload {
+    actr.RegisterResponse register_response = 2;
+    actr.UnregisterResponse unregister_response = 3;
+    actr.Pong pong = 4;
+
+    // Discovery & selection
+    actr.DiscoveryResponse discovery_response = 10;
+    actr.RouteCandidatesResponse route_candidates_response = 11;
+    actr.GetServiceSpecResponse get_service_spec_response = 12;
+    GetSigningKeyResponse get_signing_key_response = 13;
+
+    // Presence subscription
+    actr.SubscribeActrUpResponse subscribe_actr_up_response = 20;
+    actr.UnsubscribeActrUpResponse unsubscribe_actr_up_response = 21;
+    actr.ActrUpEvent actr_up_event = 22;
+
+    // Error notification specific to the request
+    actr.ErrorResponse error = 30;
+  }
+}
+
+// Flow: Actr -> SignalingServer -> Actr (explicit relay, e.g., WebRTC signaling)
+message ActrRelay {
+  required actr.ActrId source = 1;
+  required actr.AIdCredential credential = 2;
+  required actr.ActrId target = 3;
+
+  oneof payload {
+    webrtc.IceCandidate ice_candidate = 10;
+    webrtc.SessionDescription session_description = 11;
+    // Decide offerer vs answerer before SDP exchange
+    actr.RoleNegotiation role_negotiation = 12;
+    actr.RoleAssignment role_assignment = 13;
+    // Answerer notifies Offerer to immediately retry ICE restart (方案 A)
+    actr.IceRestartRequest ice_restart_request = 14;
+  }
+}

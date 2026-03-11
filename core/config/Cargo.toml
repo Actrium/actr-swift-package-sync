@@ -1,0 +1,40 @@
+[features]
+default = []
+opentelemetry = []
+
+[package]
+name = "actr-config"
+version = "0.2.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Configuration file parser and project manifest support for Actor-RTC framework"
+repository = "https://github.com/actor-rtc/actr"
+
+[lints]
+workspace = true
+
+[dependencies]
+# Protocol definitions (local path)
+actr-protocol.workspace = true
+
+# Version management (local path)
+actr-service-compat.workspace = true
+
+# Serialization and configuration parsing
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+
+# Error handling
+thiserror.workspace = true
+
+# URL handling for proto dependencies
+url = "2.5"
+
+# Time handling for lock files
+chrono = { version = "0.4", features = ["serde"] }
+
+[dev-dependencies]
+# JSON serialization for tests
+serde_json = "1.0"
+tempfile = "3.23"

@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # 创建 GitHub Release
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ steps.get_version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+        body: |
+          ## Changes in ${{ steps.get_version.outputs.VERSION }}
+
+          ### 🚀 Features
+          - Protocol compatibility analysis
+          - Semantic breaking change detection
+          - Service-level compatibility checking
+
+          ### 📦 Installation
+          ```toml
+          [dependencies]
+          actr-version = "${{ steps.get_version.outputs.VERSION }}"
+          ```
+
+          ### 📖 Documentation
+          - [API Documentation](https://docs.rs/actr-version)
+          - [Crate Page](https://crates.io/crates/actr-version)
+
+  # 发布到 crates.io
+  publish:
+    name: Publish to crates.io
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Login to crates.io
+      run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
+
+    - name: Publish
+      run: cargo publish

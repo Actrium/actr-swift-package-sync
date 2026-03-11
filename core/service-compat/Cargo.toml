@@ -1,0 +1,37 @@
+[package]
+name = "actr-service-compat"
+version = "0.2.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Actor service protocol compatibility analysis using semantic proto schema comparison"
+keywords = [
+    "actor",
+    "protobuf",
+    "compatibility",
+    "breaking-changes",
+    "service",
+]
+repository = "https://github.com/actor-rtc/actr"
+readme = "README.md"
+
+[lints]
+workspace = true
+
+[dependencies]
+# Core dependencies for service compatibility analysis
+actr-protocol.workspace = true
+proto-fingerprint.workspace = true
+
+# Serialization support
+serde = { version = "1.0", features = ["derive"] }
+
+# Error handling
+thiserror.workspace = true
+anyhow = "1.0"
+
+# Time handling for fingerprint metadata
+chrono = { version = "0.4", features = ["serde"] }
+
+# Cryptographic hashing
+sha2 = "0.10"

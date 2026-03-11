@@ -1,0 +1,81 @@
+[package]
+name = "actr-runtime"
+version = "0.2.0"
+edition.workspace = true
+rust-version.workspace = true
+description = "Runtime layer for Actor-RTC framework - actor system, scheduler, and orchestration"
+repository = "https://github.com/actor-rtc/actr"
+license.workspace = true
+keywords = ["actor", "orchestration", "runtime", "scheduler", "system"]
+categories = ["asynchronous", "concurrency", "development-tools"]
+
+[dependencies]
+actr-config.workspace = true
+actr-framework.workspace = true
+# === Foundation Layer (基础层) ===
+actr-protocol.workspace = true
+# === Runtime 子 crate ===
+actr-runtime-mailbox.workspace = true
+actr-service-compat.workspace = true
+anyhow.workspace = true
+async-trait.workspace = true
+base64 = "0.22.1"
+ed25519-dalek = "2"
+bytes = "1.10"
+chrono.workspace = true
+crossbeam = "0.8"
+dashmap = "5.5"
+dotenvy = "0.15"
+either = "1.15"
+futures-util.workspace = true
+hex = "0.4"
+num_cpus = "1.17"
+opentelemetry = { workspace = true, optional = true }
+opentelemetry-otlp = { workspace = true, optional = true }
+opentelemetry_sdk = { workspace = true, optional = true }
+prost-types = "0.14"
+pwrzv.workspace = true
+rand = "0.8"
+# === 序列化 ===
+serde.workspace = true
+serde_json.workspace = true
+sha2 = "0.10"
+thiserror.workspace = true
+# === 异步运行时 ===
+tokio.workspace = true
+tokio-stream = { version = "0.1", features = ["sync"] }
+tokio-tungstenite = { workspace = true }
+# === 调度和并发 ===
+tokio-util = { version = "0.7", features = ["full"] }
+toml = "0.8"
+# === 日志记录 ===
+tracing.workspace = true
+tracing-opentelemetry = { workspace = true, optional = true }
+tracing-subscriber.workspace = true
+url = "2.5"
+# === 工具库 ===
+uuid.workspace = true
+webrtc = "0.14"
+
+[dev-dependencies]
+actr-runtime = { path = ".", features = ["test-utils"] }
+prost = "0.14"
+tempfile = "3.23"
+tokio-test = "0.4"
+webrtc-ice = "0.14"
+webrtc-util = "0.12"
+
+[features]
+default = []
+opentelemetry = [
+  "actr-config/opentelemetry",
+  "dep:opentelemetry",
+  "dep:opentelemetry-otlp",
+  "dep:opentelemetry_sdk",
+  "dep:tracing-opentelemetry",
+]
+# Enable test utilities for integration tests (e.g., force ICE restart on all connections)
+test-utils = []
+
+[lints]
+workspace = true

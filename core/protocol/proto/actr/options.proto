@@ -1,0 +1,30 @@
+// Copyright 2025 actr Project Authors
+//
+// Licensed under the Apache License, Version 2.0
+// Protobuf options for declarative lane selection
+
+syntax = "proto2";
+
+package actr;
+
+import "google/protobuf/descriptor.proto";
+
+// Payload types for traffic segregation (message type + transport characteristics)
+// Format: <MessageType>_<TransportMode>
+enum PayloadType {
+    // RpcEnvelope types
+    RPC_RELIABLE = 0;           // RpcEnvelope with reliable ordered transmission - DEFAULT
+    RPC_SIGNAL = 1;             // RpcEnvelope with high-priority signaling channel
+
+    // StreamChunk types
+    STREAM_RELIABLE = 2;        // StreamChunk with reliable ordered transmission
+    STREAM_LATENCY_FIRST = 3;   // StreamChunk with low latency partial-reliable transmission
+
+    // MediaFrame types
+    MEDIA_RTP = 4;              // MediaFrame over WebRTC RTP MediaTrack
+}
+
+// Method-level option for lane selection
+extend google.protobuf.MethodOptions {
+    optional PayloadType payload_type = 50001;
+}

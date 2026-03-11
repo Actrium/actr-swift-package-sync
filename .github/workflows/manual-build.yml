@@ -1,0 +1,43 @@
+name: Swift Manual Build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate snapshot workspace
+        run: |
+          test -f package-sync-source.json
+          test -f Package.swift
+          test -f Cargo.toml
+          test -f bindings/swift/build-xcframework.sh
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim,aarch64-apple-darwin
+      - uses: Swatinem/rust-cache@v2
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+      - name: Install UniFFI bindgen
+        run: cargo install --locked uniffi --version 0.30.0 --features cli --bin uniffi-bindgen
+      - name: Install native dependencies
+        run: brew install opus
+      - name: Build XCFramework
+        working-directory: bindings/swift
+        env:
+          ACTR_BUILD_PROFILE: debug
+          ACTR_BINDINGS_PATH: dist/ActrBindings
+          ACTR_BINARY_PATH: dist/ActrFFI.xcframework
+          CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+        run: ./build-xcframework.sh
+      - name: Build Swift package
+        env:
+          ACTR_BINDINGS_PATH: bindings/swift/dist/ActrBindings
+          ACTR_BINARY_PATH: bindings/swift/dist/ActrFFI.xcframework
+        run: swift build

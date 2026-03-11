@@ -1,0 +1,60 @@
+// Copyright 2025 actr Project Authors
+//
+// Licensed under the Apache License, Version 2.0
+// Package-level message envelopes
+
+syntax = "proto2";
+
+package actr;
+
+import "actr.proto";
+
+// Metadata key-value pair
+message MetadataEntry {
+    required string key = 1;
+    required string value = 2;
+}
+
+// RpcEnvelope wraps State Path RPC messages
+message RpcEnvelope {
+    // Route key: "package.Service.Method"
+    required string route_key = 1;
+
+    // Payload for successful RPC (request or response)
+    // Optional: when error is present, payload should be empty
+    optional bytes payload = 2;
+
+    // System-level error (envelope layer)
+    // Examples: UnknownRoute, DeserializationError, Panic, InvalidStateTransition
+    // Business errors should be in the response message payload
+    optional ErrorResponse error = 3;
+
+    // W3C trace context header values (for distributed tracing)
+    optional string traceparent = 100;  // W3C trace context header value
+    optional string tracestate = 101;  // W3C trace state header value
+
+    required string request_id = 102;
+    repeated MetadataEntry metadata = 103;
+    required int64 timeout_ms = 104;
+}
+
+// DataStream - Application data stream packet (Fast Path)
+//
+// For streaming application data (non-media):
+// - File transfer chunks
+// - Game state updates
+// - Custom protocol streams
+message DataStream {
+    required string stream_id = 1;
+    required uint64 sequence = 2;
+    required bytes payload = 3;
+    repeated MetadataEntry metadata = 4;
+    optional int64 timestamp_ms = 5;
+}
+
+// NOTE: MediaFrame is NOT needed as a protobuf message.
+// Media streaming uses WebRTC native MediaStreamTrack API:
+// - Each track is a separate RTP channel with its own ID
+// - RTP headers already contain sequence numbers, timestamps, SSRC
+// - No protobuf serialization overhead
+// - MediaFrameRegistry maps track_id to native frame callbacks
