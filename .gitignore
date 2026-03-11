@@ -1,4 +1,3 @@
 .build/
-target/
-bindings/swift/dist/
-bindings/swift/ActrFFI.xcframework/
+ActrFFI.xcframework/
+source-checkout/

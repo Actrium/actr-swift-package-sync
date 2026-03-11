@@ -2,6 +2,12 @@ name: Swift Manual Build
 
 on:
   workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Source ref from the actr monorepo.
+        required: true
+        default: main
+        type: string
 
 permissions:
   contents: read
@@ -11,12 +17,16 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Validate snapshot workspace
+      - name: Validate package-sync repository
         run: |
-          test -f package-sync-source.json
           test -f Package.swift
-          test -f Cargo.toml
-          test -f bindings/swift/build-xcframework.sh
+          test -f .github/workflows/manual-build.yml
+      - name: Checkout source repository
+        env:
+          SOURCE_REPOSITORY: https://github.com/Actrium/actr
+        run: |
+          rm -rf source-checkout
+          git clone --depth 1 --branch "${{ inputs.source_ref }}" "${SOURCE_REPOSITORY}" source-checkout
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -31,7 +41,7 @@ jobs:
       - name: Install native dependencies
         run: brew install opus
       - name: Build XCFramework
-        working-directory: bindings/swift
+        working-directory: source-checkout/bindings/swift
         env:
           ACTR_BUILD_PROFILE: debug
           ACTR_BINDINGS_PATH: dist/ActrBindings
@@ -40,6 +50,6 @@ jobs:
         run: ./build-xcframework.sh
       - name: Build Swift package
         env:
-          ACTR_BINDINGS_PATH: bindings/swift/dist/ActrBindings
-          ACTR_BINARY_PATH: bindings/swift/dist/ActrFFI.xcframework
-        run: swift build
+          ACTR_BINDINGS_PATH: source-checkout/bindings/swift/dist/ActrBindings
+          ACTR_BINARY_PATH: source-checkout/bindings/swift/dist/ActrFFI.xcframework
+        run: swift build --package-path source-checkout/bindings/swift

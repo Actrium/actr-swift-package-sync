@@ -1,5 +1,0 @@
-[bindings.kotlin]
-package_name = "io.actor_rtc.actr"
-
-[bindings.swift]
-module_name = "Actr"

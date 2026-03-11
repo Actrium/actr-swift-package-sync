@@ -27,12 +27,18 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
-      - name: Validate snapshot workspace
+      - name: Validate package-sync repository
         run: |
-          test -f package-sync-source.json
           test -f Package.swift
-          test -f Cargo.toml
-          test -f bindings/swift/build-xcframework.sh
+          test -f .github/workflows/release.yml
+      - name: Checkout source repository
+        env:
+          SOURCE_REPOSITORY: https://github.com/Actrium/actr
+        run: |
+          rm -rf source-checkout
+          git clone --depth 1 --branch "${{ inputs.source_tag }}" "${SOURCE_REPOSITORY}" source-checkout
+          actual_sha=$(git -C source-checkout rev-parse HEAD)
+          test "${actual_sha}" = "${{ inputs.source_sha }}"
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -47,7 +53,7 @@ jobs:
       - name: Install native dependencies
         run: brew install opus
       - name: Build XCFramework
-        working-directory: bindings/swift
+        working-directory: source-checkout/bindings/swift
         env:
           ACTR_BUILD_PROFILE: release
           ACTR_BINDINGS_PATH: dist/ActrBindings
@@ -56,19 +62,29 @@ jobs:
         run: ./build-xcframework.sh
       - name: Build Swift package
         env:
-          ACTR_BINDINGS_PATH: bindings/swift/dist/ActrBindings
-          ACTR_BINARY_PATH: bindings/swift/dist/ActrFFI.xcframework
-        run: swift build
+          ACTR_BINDINGS_PATH: source-checkout/bindings/swift/dist/ActrBindings
+          ACTR_BINARY_PATH: source-checkout/bindings/swift/dist/ActrFFI.xcframework
+        run: swift build --package-path source-checkout/bindings/swift
       - name: Package XCFramework
-        working-directory: bindings/swift
+        working-directory: source-checkout/bindings/swift
         env:
           ACTR_BINARY_PATH: dist/ActrFFI.xcframework
         run: ./scripts/package-binary.sh "v${{ inputs.version }}"
+      - name: Sync Swift package files
+        run: |
+          mkdir -p Sources
+          rsync -a --delete source-checkout/bindings/swift/Sources/ Sources/
+          rsync -a --delete source-checkout/bindings/swift/dist/ActrBindings/ ActrBindings/
+      - name: Build distribution package
+        env:
+          ACTR_BINDINGS_PATH: ActrBindings
+          ACTR_BINARY_PATH: source-checkout/bindings/swift/dist/ActrFFI.xcframework
+        run: swift build
       - name: Update Package.swift defaults
         run: |
           checksum=$(python3 - <<'PY'
           from pathlib import Path
-          text = Path("bindings/swift/dist/release.txt").read_text()
+          text = Path("source-checkout/bindings/swift/dist/release.txt").read_text()
           for line in text.splitlines():
               if line.startswith("SHA256 checksum:"):
                   print(line.split(":", 1)[1].strip())
@@ -90,11 +106,30 @@ jobs:
           text = re.sub(r'let remoteBinaryChecksum = env\["ACTR_BINARY_CHECKSUM"\] \?\? [^\n]+', f'let remoteBinaryChecksum = env["ACTR_BINARY_CHECKSUM"] ?? "{checksum}"', text)
           path.write_text(text)
           PY
+      - name: Write release metadata
+        run: |
+          python3 - "${{ inputs.version }}" "${{ inputs.source_tag }}" "${{ inputs.source_sha }}" <<'PY'
+          from __future__ import annotations
+
+          import json
+          import sys
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          payload = {
+              "version": sys.argv[1],
+              "source_repository": "https://github.com/Actrium/actr",
+              "source_tag": sys.argv[2],
+              "source_sha": sys.argv[3],
+              "generated_at": datetime.now(timezone.utc).isoformat(),
+          }
+          Path("release-metadata.json").write_text(json.dumps(payload, indent=2) + "\n")
+          PY
       - name: Commit release metadata
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Package.swift
+          git config user.name "Harry"
+          git config user.email "128583280+kaito-harry@users.noreply.github.com"
+          git add Package.swift Sources ActrBindings release-metadata.json
           git commit -m "chore(release): publish v${{ inputs.version }}" || exit 0
           git push origin main
       - name: Tag release
@@ -111,6 +146,6 @@ jobs:
           Source sha: ${{ inputs.source_sha }}
           EOF
           gh release create "v${{ inputs.version }}" \
-            "bindings/swift/dist/ActrFFI.xcframework.zip" \
+            "source-checkout/bindings/swift/dist/ActrFFI.xcframework.zip" \
             --title "v${{ inputs.version }}" \
             --notes-file release-notes.md

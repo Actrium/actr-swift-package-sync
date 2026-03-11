@@ -3,9 +3,9 @@ import Foundation
 import PackageDescription
 
 let env = ProcessInfo.processInfo.environment
-let bindingsPath = env["ACTR_BINDINGS_PATH"] ?? "bindings/swift/ActrBindings"
+let bindingsPath = env["ACTR_BINDINGS_PATH"] ?? "ActrBindings"
 let overrideBinaryPath = env["ACTR_BINARY_PATH"]
-let localBinaryPath = "bindings/swift/ActrFFI.xcframework"
+let localBinaryPath = "ActrFFI.xcframework"
 let releaseTag = env["ACTR_BINARY_TAG"] ?? "v0.2.0"
 let remoteBinaryURL = "https://github.com/Actrium/actr-swift-package-sync/releases/download/\(releaseTag)/ActrFFI.xcframework.zip"
 let remoteBinaryChecksum = env["ACTR_BINARY_CHECKSUM"] ?? "33020bdcfababe2049763c8bbbb6e539bc04f4fed2127b97c291b4c3ce7d7654"
@@ -87,7 +87,7 @@ let package = Package(
                 "ActrFFILib",
                 .product(name: "SwiftProtobuf", package: "swift-protobuf"),
             ],
-            path: "bindings/swift/Sources/Actr"
+            path: "Sources/Actr"
         ),
     ]
 )
