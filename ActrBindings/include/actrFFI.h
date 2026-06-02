@@ -243,9 +243,27 @@ typedef void (*UniffiForeignFutureCompleteVoid)(uint64_t, UniffiForeignFutureRes
     );
 
 #endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_CREDENTIAL_OBSERVER_BRIDGE_METHOD0
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_CREDENTIAL_OBSERVER_BRIDGE_METHOD0
+typedef void (*UniffiCallbackInterfaceCredentialObserverBridgeMethod0)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_CREDENTIAL_OBSERVER_BRIDGE_METHOD1
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_CREDENTIAL_OBSERVER_BRIDGE_METHOD1
+typedef void (*UniffiCallbackInterfaceCredentialObserverBridgeMethod1)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
 #ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_DATA_STREAM_CALLBACK_METHOD0
 #define UNIFFI_FFIDEF_CALLBACK_INTERFACE_DATA_STREAM_CALLBACK_METHOD0
 typedef void (*UniffiCallbackInterfaceDataStreamCallbackMethod0)(uint64_t, RustBuffer, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_MAILBOX_OBSERVER_BRIDGE_METHOD0
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_MAILBOX_OBSERVER_BRIDGE_METHOD0
+typedef void (*UniffiCallbackInterfaceMailboxObserverBridgeMethod0)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
     );
 
 #endif
@@ -255,22 +273,98 @@ typedef void (*UniffiCallbackInterfaceMediaTrackCallbackMethod0)(uint64_t, RustB
     );
 
 #endif
-#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_BRIDGE_METHOD0
-#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_BRIDGE_METHOD0
-typedef void (*UniffiCallbackInterfaceWorkloadBridgeMethod0)(uint64_t, uint64_t, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_SIGNALING_OBSERVER_BRIDGE_METHOD0
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_SIGNALING_OBSERVER_BRIDGE_METHOD0
+typedef void (*UniffiCallbackInterfaceSignalingObserverBridgeMethod0)(uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
     );
 
 #endif
-#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_BRIDGE_METHOD1
-#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_BRIDGE_METHOD1
-typedef void (*UniffiCallbackInterfaceWorkloadBridgeMethod1)(uint64_t, uint64_t, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_SIGNALING_OBSERVER_BRIDGE_METHOD1
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_SIGNALING_OBSERVER_BRIDGE_METHOD1
+typedef void (*UniffiCallbackInterfaceSignalingObserverBridgeMethod1)(uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
     );
 
 #endif
-#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_BRIDGE_METHOD2
-#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_BRIDGE_METHOD2
-typedef void (*UniffiCallbackInterfaceWorkloadBridgeMethod2)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteRustBuffer _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_SIGNALING_OBSERVER_BRIDGE_METHOD2
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_SIGNALING_OBSERVER_BRIDGE_METHOD2
+typedef void (*UniffiCallbackInterfaceSignalingObserverBridgeMethod2)(uint64_t, uint64_t, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
     );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_RTC_OBSERVER_BRIDGE_METHOD0
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_RTC_OBSERVER_BRIDGE_METHOD0
+typedef void (*UniffiCallbackInterfaceWebRtcObserverBridgeMethod0)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_RTC_OBSERVER_BRIDGE_METHOD1
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_RTC_OBSERVER_BRIDGE_METHOD1
+typedef void (*UniffiCallbackInterfaceWebRtcObserverBridgeMethod1)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_RTC_OBSERVER_BRIDGE_METHOD2
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_RTC_OBSERVER_BRIDGE_METHOD2
+typedef void (*UniffiCallbackInterfaceWebRtcObserverBridgeMethod2)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_SOCKET_OBSERVER_BRIDGE_METHOD0
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_SOCKET_OBSERVER_BRIDGE_METHOD0
+typedef void (*UniffiCallbackInterfaceWebSocketObserverBridgeMethod0)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_SOCKET_OBSERVER_BRIDGE_METHOD1
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_SOCKET_OBSERVER_BRIDGE_METHOD1
+typedef void (*UniffiCallbackInterfaceWebSocketObserverBridgeMethod1)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_SOCKET_OBSERVER_BRIDGE_METHOD2
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WEB_SOCKET_OBSERVER_BRIDGE_METHOD2
+typedef void (*UniffiCallbackInterfaceWebSocketObserverBridgeMethod2)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE_METHOD0
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE_METHOD0
+typedef void (*UniffiCallbackInterfaceWorkloadLifecycleBridgeMethod0)(uint64_t, uint64_t, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE_METHOD1
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE_METHOD1
+typedef void (*UniffiCallbackInterfaceWorkloadLifecycleBridgeMethod1)(uint64_t, uint64_t, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE_METHOD2
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE_METHOD2
+typedef void (*UniffiCallbackInterfaceWorkloadLifecycleBridgeMethod2)(uint64_t, uint64_t, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE_METHOD3
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE_METHOD3
+typedef void (*UniffiCallbackInterfaceWorkloadLifecycleBridgeMethod3)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteVoid _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE_METHOD4
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE_METHOD4
+typedef void (*UniffiCallbackInterfaceWorkloadLifecycleBridgeMethod4)(uint64_t, uint64_t, RustBuffer, UniffiForeignFutureCompleteRustBuffer _Nonnull, uint64_t, UniffiForeignFutureDroppedCallbackStruct* _Nonnull
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_CREDENTIAL_OBSERVER_BRIDGE
+#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_CREDENTIAL_OBSERVER_BRIDGE
+typedef struct UniffiVTableCallbackInterfaceCredentialObserverBridge {
+    UniffiCallbackInterfaceFree _Nonnull uniffiFree;
+    UniffiCallbackInterfaceClone _Nonnull uniffiClone;
+    UniffiCallbackInterfaceCredentialObserverBridgeMethod0 _Nonnull onRenewed;
+    UniffiCallbackInterfaceCredentialObserverBridgeMethod1 _Nonnull onExpiring;
+} UniffiVTableCallbackInterfaceCredentialObserverBridge;
 
 #endif
 #ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_DATA_STREAM_CALLBACK
@@ -282,6 +376,15 @@ typedef struct UniffiVTableCallbackInterfaceDataStreamCallback {
 } UniffiVTableCallbackInterfaceDataStreamCallback;
 
 #endif
+#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_MAILBOX_OBSERVER_BRIDGE
+#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_MAILBOX_OBSERVER_BRIDGE
+typedef struct UniffiVTableCallbackInterfaceMailboxObserverBridge {
+    UniffiCallbackInterfaceFree _Nonnull uniffiFree;
+    UniffiCallbackInterfaceClone _Nonnull uniffiClone;
+    UniffiCallbackInterfaceMailboxObserverBridgeMethod0 _Nonnull onBackpressure;
+} UniffiVTableCallbackInterfaceMailboxObserverBridge;
+
+#endif
 #ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_MEDIA_TRACK_CALLBACK
 #define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_MEDIA_TRACK_CALLBACK
 typedef struct UniffiVTableCallbackInterfaceMediaTrackCallback {
@@ -291,30 +394,80 @@ typedef struct UniffiVTableCallbackInterfaceMediaTrackCallback {
 } UniffiVTableCallbackInterfaceMediaTrackCallback;
 
 #endif
-#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_WORKLOAD_BRIDGE
-#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_WORKLOAD_BRIDGE
-typedef struct UniffiVTableCallbackInterfaceWorkloadBridge {
+#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_SIGNALING_OBSERVER_BRIDGE
+#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_SIGNALING_OBSERVER_BRIDGE
+typedef struct UniffiVTableCallbackInterfaceSignalingObserverBridge {
     UniffiCallbackInterfaceFree _Nonnull uniffiFree;
     UniffiCallbackInterfaceClone _Nonnull uniffiClone;
-    UniffiCallbackInterfaceWorkloadBridgeMethod0 _Nonnull onStart;
-    UniffiCallbackInterfaceWorkloadBridgeMethod1 _Nonnull onStop;
-    UniffiCallbackInterfaceWorkloadBridgeMethod2 _Nonnull dispatch;
-} UniffiVTableCallbackInterfaceWorkloadBridge;
+    UniffiCallbackInterfaceSignalingObserverBridgeMethod0 _Nonnull onConnecting;
+    UniffiCallbackInterfaceSignalingObserverBridgeMethod1 _Nonnull onConnected;
+    UniffiCallbackInterfaceSignalingObserverBridgeMethod2 _Nonnull onDisconnected;
+} UniffiVTableCallbackInterfaceSignalingObserverBridge;
 
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CLONE_ACTRNODEWRAPPER
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CLONE_ACTRNODEWRAPPER
-uint64_t uniffi_actr_fn_clone_actrnodewrapper(uint64_t handle, RustCallStatus *_Nonnull out_status
+#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_WEB_RTC_OBSERVER_BRIDGE
+#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_WEB_RTC_OBSERVER_BRIDGE
+typedef struct UniffiVTableCallbackInterfaceWebRtcObserverBridge {
+    UniffiCallbackInterfaceFree _Nonnull uniffiFree;
+    UniffiCallbackInterfaceClone _Nonnull uniffiClone;
+    UniffiCallbackInterfaceWebRtcObserverBridgeMethod0 _Nonnull onConnecting;
+    UniffiCallbackInterfaceWebRtcObserverBridgeMethod1 _Nonnull onConnected;
+    UniffiCallbackInterfaceWebRtcObserverBridgeMethod2 _Nonnull onDisconnected;
+} UniffiVTableCallbackInterfaceWebRtcObserverBridge;
+
+#endif
+#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_WEB_SOCKET_OBSERVER_BRIDGE
+#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_WEB_SOCKET_OBSERVER_BRIDGE
+typedef struct UniffiVTableCallbackInterfaceWebSocketObserverBridge {
+    UniffiCallbackInterfaceFree _Nonnull uniffiFree;
+    UniffiCallbackInterfaceClone _Nonnull uniffiClone;
+    UniffiCallbackInterfaceWebSocketObserverBridgeMethod0 _Nonnull onConnecting;
+    UniffiCallbackInterfaceWebSocketObserverBridgeMethod1 _Nonnull onConnected;
+    UniffiCallbackInterfaceWebSocketObserverBridgeMethod2 _Nonnull onDisconnected;
+} UniffiVTableCallbackInterfaceWebSocketObserverBridge;
+
+#endif
+#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE
+#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_WORKLOAD_LIFECYCLE_BRIDGE
+typedef struct UniffiVTableCallbackInterfaceWorkloadLifecycleBridge {
+    UniffiCallbackInterfaceFree _Nonnull uniffiFree;
+    UniffiCallbackInterfaceClone _Nonnull uniffiClone;
+    UniffiCallbackInterfaceWorkloadLifecycleBridgeMethod0 _Nonnull onStart;
+    UniffiCallbackInterfaceWorkloadLifecycleBridgeMethod1 _Nonnull onReady;
+    UniffiCallbackInterfaceWorkloadLifecycleBridgeMethod2 _Nonnull onStop;
+    UniffiCallbackInterfaceWorkloadLifecycleBridgeMethod3 _Nonnull onError;
+    UniffiCallbackInterfaceWorkloadLifecycleBridgeMethod4 _Nonnull dispatch;
+} UniffiVTableCallbackInterfaceWorkloadLifecycleBridge;
+
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CLONE_ACTRNODE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CLONE_ACTRNODE
+uint64_t uniffi_actr_fn_clone_actrnode(uint64_t handle, RustCallStatus *_Nonnull out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FREE_ACTRNODEWRAPPER
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FREE_ACTRNODEWRAPPER
-void uniffi_actr_fn_free_actrnodewrapper(uint64_t handle, RustCallStatus *_Nonnull out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FREE_ACTRNODE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FREE_ACTRNODE
+void uniffi_actr_fn_free_actrnode(uint64_t handle, RustCallStatus *_Nonnull out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRNODEWRAPPER_START
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRNODEWRAPPER_START
-uint64_t uniffi_actr_fn_method_actrnodewrapper_start(uint64_t ptr
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CONSTRUCTOR_ACTRNODE_NEW_FROM_LINKED_WORKLOAD
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CONSTRUCTOR_ACTRNODE_NEW_FROM_LINKED_WORKLOAD
+uint64_t uniffi_actr_fn_constructor_actrnode_new_from_linked_workload(RustBuffer config_path, RustBuffer actor_type, uint64_t workload
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CONSTRUCTOR_ACTRNODE_NEW_FROM_PACKAGE_FILE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CONSTRUCTOR_ACTRNODE_NEW_FROM_PACKAGE_FILE
+uint64_t uniffi_actr_fn_constructor_actrnode_new_from_package_file(RustBuffer config_path, RustBuffer package_path
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRNODE_CREATE_NETWORK_EVENT_HANDLE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRNODE_CREATE_NETWORK_EVENT_HANDLE
+uint64_t uniffi_actr_fn_method_actrnode_create_network_event_handle(uint64_t ptr, RustCallStatus *_Nonnull out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRNODE_START
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRNODE_START
+uint64_t uniffi_actr_fn_method_actrnode_start(uint64_t ptr
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CLONE_ACTRREFWRAPPER
@@ -360,31 +513,6 @@ uint64_t uniffi_actr_fn_method_actrrefwrapper_tell(uint64_t ptr, RustBuffer rout
 #ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRREFWRAPPER_WAIT_FOR_SHUTDOWN
 #define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRREFWRAPPER_WAIT_FOR_SHUTDOWN
 uint64_t uniffi_actr_fn_method_actrrefwrapper_wait_for_shutdown(uint64_t ptr
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CLONE_ACTRSYSTEMWRAPPER
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CLONE_ACTRSYSTEMWRAPPER
-uint64_t uniffi_actr_fn_clone_actrsystemwrapper(uint64_t handle, RustCallStatus *_Nonnull out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FREE_ACTRSYSTEMWRAPPER
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FREE_ACTRSYSTEMWRAPPER
-void uniffi_actr_fn_free_actrsystemwrapper(uint64_t handle, RustCallStatus *_Nonnull out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CONSTRUCTOR_ACTRSYSTEMWRAPPER_NEW_FROM_FILE
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CONSTRUCTOR_ACTRSYSTEMWRAPPER_NEW_FROM_FILE
-uint64_t uniffi_actr_fn_constructor_actrsystemwrapper_new_from_file(RustBuffer config_path
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRSYSTEMWRAPPER_ATTACH
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRSYSTEMWRAPPER_ATTACH
-uint64_t uniffi_actr_fn_method_actrsystemwrapper_attach(uint64_t ptr, uint64_t callback, RustCallStatus *_Nonnull out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRSYSTEMWRAPPER_CREATE_NETWORK_EVENT_HANDLE
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_METHOD_ACTRSYSTEMWRAPPER_CREATE_NETWORK_EVENT_HANDLE
-uint64_t uniffi_actr_fn_method_actrsystemwrapper_create_network_event_handle(uint64_t ptr, RustCallStatus *_Nonnull out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CLONE_CONTEXTBRIDGE
@@ -462,6 +590,11 @@ uint64_t uniffi_actr_fn_clone_dynamicworkload(uint64_t handle, RustCallStatus *_
 void uniffi_actr_fn_free_dynamicworkload(uint64_t handle, RustCallStatus *_Nonnull out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CONSTRUCTOR_DYNAMICWORKLOAD_NEW
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CONSTRUCTOR_DYNAMICWORKLOAD_NEW
+uint64_t uniffi_actr_fn_constructor_dynamicworkload_new(uint64_t lifecycle, RustBuffer signaling, RustBuffer websocket, RustBuffer webrtc, RustBuffer credential, RustBuffer mailbox, RustCallStatus *_Nonnull out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CLONE_NETWORKEVENTHANDLEWRAPPER
 #define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_CLONE_NETWORKEVENTHANDLEWRAPPER
 uint64_t uniffi_actr_fn_clone_networkeventhandlewrapper(uint64_t handle, RustCallStatus *_Nonnull out_status
@@ -517,9 +650,19 @@ RustBuffer uniffi_actr_fn_method_opusencoder_encode(uint64_t ptr, RustBuffer pcm
 uint16_t uniffi_actr_fn_method_opusencoder_frame_size(uint64_t ptr, RustCallStatus *_Nonnull out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_CREDENTIALOBSERVERBRIDGE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_CREDENTIALOBSERVERBRIDGE
+void uniffi_actr_fn_init_callback_vtable_credentialobserverbridge(const UniffiVTableCallbackInterfaceCredentialObserverBridge* _Nonnull vtable
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_DATASTREAMCALLBACK
 #define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_DATASTREAMCALLBACK
 void uniffi_actr_fn_init_callback_vtable_datastreamcallback(const UniffiVTableCallbackInterfaceDataStreamCallback* _Nonnull vtable
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_MAILBOXOBSERVERBRIDGE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_MAILBOXOBSERVERBRIDGE
+void uniffi_actr_fn_init_callback_vtable_mailboxobserverbridge(const UniffiVTableCallbackInterfaceMailboxObserverBridge* _Nonnull vtable
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_MEDIATRACKCALLBACK
@@ -527,9 +670,39 @@ void uniffi_actr_fn_init_callback_vtable_datastreamcallback(const UniffiVTableCa
 void uniffi_actr_fn_init_callback_vtable_mediatrackcallback(const UniffiVTableCallbackInterfaceMediaTrackCallback* _Nonnull vtable
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_WORKLOADBRIDGE
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_WORKLOADBRIDGE
-void uniffi_actr_fn_init_callback_vtable_workloadbridge(const UniffiVTableCallbackInterfaceWorkloadBridge* _Nonnull vtable
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_SIGNALINGOBSERVERBRIDGE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_SIGNALINGOBSERVERBRIDGE
+void uniffi_actr_fn_init_callback_vtable_signalingobserverbridge(const UniffiVTableCallbackInterfaceSignalingObserverBridge* _Nonnull vtable
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_WEBRTCOBSERVERBRIDGE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_WEBRTCOBSERVERBRIDGE
+void uniffi_actr_fn_init_callback_vtable_webrtcobserverbridge(const UniffiVTableCallbackInterfaceWebRtcObserverBridge* _Nonnull vtable
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_WEBSOCKETOBSERVERBRIDGE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_WEBSOCKETOBSERVERBRIDGE
+void uniffi_actr_fn_init_callback_vtable_websocketobserverbridge(const UniffiVTableCallbackInterfaceWebSocketObserverBridge* _Nonnull vtable
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_WORKLOADLIFECYCLEBRIDGE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_INIT_CALLBACK_VTABLE_WORKLOADLIFECYCLEBRIDGE
+void uniffi_actr_fn_init_callback_vtable_workloadlifecyclebridge(const UniffiVTableCallbackInterfaceWorkloadLifecycleBridge* _Nonnull vtable
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FUNC_ACTR_ERROR_IS_RETRYABLE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FUNC_ACTR_ERROR_IS_RETRYABLE
+int8_t uniffi_actr_fn_func_actr_error_is_retryable(RustBuffer err, RustCallStatus *_Nonnull out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FUNC_ACTR_ERROR_KIND
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FUNC_ACTR_ERROR_KIND
+RustBuffer uniffi_actr_fn_func_actr_error_kind(RustBuffer err, RustCallStatus *_Nonnull out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FUNC_ACTR_ERROR_REQUIRES_DLQ
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_FN_FUNC_ACTR_ERROR_REQUIRES_DLQ
+int8_t uniffi_actr_fn_func_actr_error_requires_dlq(RustBuffer err, RustCallStatus *_Nonnull out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_FFI_ACTR_RUSTBUFFER_ALLOC
@@ -792,9 +965,33 @@ void ffi_actr_rust_future_free_void(uint64_t handle
 void ffi_actr_rust_future_complete_void(uint64_t handle, RustCallStatus *_Nonnull out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRNODEWRAPPER_START
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRNODEWRAPPER_START
-uint16_t uniffi_actr_checksum_method_actrnodewrapper_start(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_FUNC_ACTR_ERROR_IS_RETRYABLE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_FUNC_ACTR_ERROR_IS_RETRYABLE
+uint16_t uniffi_actr_checksum_func_actr_error_is_retryable(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_FUNC_ACTR_ERROR_KIND
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_FUNC_ACTR_ERROR_KIND
+uint16_t uniffi_actr_checksum_func_actr_error_kind(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_FUNC_ACTR_ERROR_REQUIRES_DLQ
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_FUNC_ACTR_ERROR_REQUIRES_DLQ
+uint16_t uniffi_actr_checksum_func_actr_error_requires_dlq(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRNODE_CREATE_NETWORK_EVENT_HANDLE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRNODE_CREATE_NETWORK_EVENT_HANDLE
+uint16_t uniffi_actr_checksum_method_actrnode_create_network_event_handle(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRNODE_START
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRNODE_START
+uint16_t uniffi_actr_checksum_method_actrnode_start(void
     
 );
 #endif
@@ -837,18 +1034,6 @@ uint16_t uniffi_actr_checksum_method_actrrefwrapper_tell(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRREFWRAPPER_WAIT_FOR_SHUTDOWN
 #define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRREFWRAPPER_WAIT_FOR_SHUTDOWN
 uint16_t uniffi_actr_checksum_method_actrrefwrapper_wait_for_shutdown(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRSYSTEMWRAPPER_ATTACH
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRSYSTEMWRAPPER_ATTACH
-uint16_t uniffi_actr_checksum_method_actrsystemwrapper_attach(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRSYSTEMWRAPPER_CREATE_NETWORK_EVENT_HANDLE
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_ACTRSYSTEMWRAPPER_CREATE_NETWORK_EVENT_HANDLE
-uint16_t uniffi_actr_checksum_method_actrsystemwrapper_create_network_event_handle(void
     
 );
 #endif
@@ -954,9 +1139,21 @@ uint16_t uniffi_actr_checksum_method_opusencoder_frame_size(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_CONSTRUCTOR_ACTRSYSTEMWRAPPER_NEW_FROM_FILE
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_CONSTRUCTOR_ACTRSYSTEMWRAPPER_NEW_FROM_FILE
-uint16_t uniffi_actr_checksum_constructor_actrsystemwrapper_new_from_file(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_CONSTRUCTOR_ACTRNODE_NEW_FROM_LINKED_WORKLOAD
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_CONSTRUCTOR_ACTRNODE_NEW_FROM_LINKED_WORKLOAD
+uint16_t uniffi_actr_checksum_constructor_actrnode_new_from_linked_workload(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_CONSTRUCTOR_ACTRNODE_NEW_FROM_PACKAGE_FILE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_CONSTRUCTOR_ACTRNODE_NEW_FROM_PACKAGE_FILE
+uint16_t uniffi_actr_checksum_constructor_actrnode_new_from_package_file(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_CONSTRUCTOR_DYNAMICWORKLOAD_NEW
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_CONSTRUCTOR_DYNAMICWORKLOAD_NEW
+uint16_t uniffi_actr_checksum_constructor_dynamicworkload_new(void
     
 );
 #endif
@@ -966,9 +1163,27 @@ uint16_t uniffi_actr_checksum_constructor_opusencoder_new(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_CREDENTIALOBSERVERBRIDGE_ON_RENEWED
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_CREDENTIALOBSERVERBRIDGE_ON_RENEWED
+uint16_t uniffi_actr_checksum_method_credentialobserverbridge_on_renewed(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_CREDENTIALOBSERVERBRIDGE_ON_EXPIRING
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_CREDENTIALOBSERVERBRIDGE_ON_EXPIRING
+uint16_t uniffi_actr_checksum_method_credentialobserverbridge_on_expiring(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_DATASTREAMCALLBACK_ON_STREAM
 #define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_DATASTREAMCALLBACK_ON_STREAM
 uint16_t uniffi_actr_checksum_method_datastreamcallback_on_stream(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_MAILBOXOBSERVERBRIDGE_ON_BACKPRESSURE
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_MAILBOXOBSERVERBRIDGE_ON_BACKPRESSURE
+uint16_t uniffi_actr_checksum_method_mailboxobserverbridge_on_backpressure(void
     
 );
 #endif
@@ -978,21 +1193,87 @@ uint16_t uniffi_actr_checksum_method_mediatrackcallback_on_sample(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADBRIDGE_ON_START
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADBRIDGE_ON_START
-uint16_t uniffi_actr_checksum_method_workloadbridge_on_start(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_SIGNALINGOBSERVERBRIDGE_ON_CONNECTING
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_SIGNALINGOBSERVERBRIDGE_ON_CONNECTING
+uint16_t uniffi_actr_checksum_method_signalingobserverbridge_on_connecting(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADBRIDGE_ON_STOP
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADBRIDGE_ON_STOP
-uint16_t uniffi_actr_checksum_method_workloadbridge_on_stop(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_SIGNALINGOBSERVERBRIDGE_ON_CONNECTED
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_SIGNALINGOBSERVERBRIDGE_ON_CONNECTED
+uint16_t uniffi_actr_checksum_method_signalingobserverbridge_on_connected(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADBRIDGE_DISPATCH
-#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADBRIDGE_DISPATCH
-uint16_t uniffi_actr_checksum_method_workloadbridge_dispatch(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_SIGNALINGOBSERVERBRIDGE_ON_DISCONNECTED
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_SIGNALINGOBSERVERBRIDGE_ON_DISCONNECTED
+uint16_t uniffi_actr_checksum_method_signalingobserverbridge_on_disconnected(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBRTCOBSERVERBRIDGE_ON_CONNECTING
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBRTCOBSERVERBRIDGE_ON_CONNECTING
+uint16_t uniffi_actr_checksum_method_webrtcobserverbridge_on_connecting(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBRTCOBSERVERBRIDGE_ON_CONNECTED
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBRTCOBSERVERBRIDGE_ON_CONNECTED
+uint16_t uniffi_actr_checksum_method_webrtcobserverbridge_on_connected(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBRTCOBSERVERBRIDGE_ON_DISCONNECTED
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBRTCOBSERVERBRIDGE_ON_DISCONNECTED
+uint16_t uniffi_actr_checksum_method_webrtcobserverbridge_on_disconnected(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBSOCKETOBSERVERBRIDGE_ON_CONNECTING
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBSOCKETOBSERVERBRIDGE_ON_CONNECTING
+uint16_t uniffi_actr_checksum_method_websocketobserverbridge_on_connecting(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBSOCKETOBSERVERBRIDGE_ON_CONNECTED
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBSOCKETOBSERVERBRIDGE_ON_CONNECTED
+uint16_t uniffi_actr_checksum_method_websocketobserverbridge_on_connected(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBSOCKETOBSERVERBRIDGE_ON_DISCONNECTED
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WEBSOCKETOBSERVERBRIDGE_ON_DISCONNECTED
+uint16_t uniffi_actr_checksum_method_websocketobserverbridge_on_disconnected(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADLIFECYCLEBRIDGE_ON_START
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADLIFECYCLEBRIDGE_ON_START
+uint16_t uniffi_actr_checksum_method_workloadlifecyclebridge_on_start(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADLIFECYCLEBRIDGE_ON_READY
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADLIFECYCLEBRIDGE_ON_READY
+uint16_t uniffi_actr_checksum_method_workloadlifecyclebridge_on_ready(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADLIFECYCLEBRIDGE_ON_STOP
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADLIFECYCLEBRIDGE_ON_STOP
+uint16_t uniffi_actr_checksum_method_workloadlifecyclebridge_on_stop(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADLIFECYCLEBRIDGE_ON_ERROR
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADLIFECYCLEBRIDGE_ON_ERROR
+uint16_t uniffi_actr_checksum_method_workloadlifecyclebridge_on_error(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADLIFECYCLEBRIDGE_DISPATCH
+#define UNIFFI_FFIDEF_UNIFFI_ACTR_CHECKSUM_METHOD_WORKLOADLIFECYCLEBRIDGE_DISPATCH
+uint16_t uniffi_actr_checksum_method_workloadlifecyclebridge_dispatch(void
     
 );
 #endif

@@ -9,20 +9,20 @@ import Foundation
 import SwiftProtobuf
 
 // Re-export core wrapper types used by the high-level API
-public typealias ActrSystemWrapper = ActrBindings.ActrSystemWrapper
-public typealias ActrNodeWrapper = ActrBindings.ActrNodeWrapper
 public typealias ActrRefWrapper = ActrBindings.ActrRefWrapper
 public typealias NetworkEventHandleWrapper = ActrBindings.NetworkEventHandleWrapper
 
-// Observability is automatically initialized when creating ActrSystem from a config file.
+// Observability is automatically initialized when creating ActrNode from a config file.
 
 // Re-export error types
 public typealias ActrError = ActrBindings.ActrError
 
 // Re-export protocol types used by the bridge
 public typealias ContextBridge = ActrBindings.ContextBridge
-public typealias WorkloadBridge = ActrBindings.WorkloadBridge
+public typealias WorkloadLifecycleBridge = ActrBindings.WorkloadLifecycleBridge
+public typealias DynamicWorkload = ActrBindings.DynamicWorkload
 public typealias RpcEnvelopeBridge = ActrBindings.RpcEnvelopeBridge
+public typealias ErrorEventBridge = ActrBindings.ErrorEventBridge
 
 // Re-export data types
 public typealias ActrId = ActrBindings.ActrId
@@ -35,6 +35,7 @@ public typealias PayloadType = ActrBindings.PayloadType
 /// for interacting with actors in the ACTR system.
 public final class ActrRef: Sendable {
     private let inner: ActrRefWrapper
+    private let retainedWorkload: DynamicWorkload?
 
     /// Get the actor's ID
     public func actorId() -> ActrId {
@@ -61,6 +62,21 @@ public final class ActrRef: Sendable {
             timeoutMs: timeoutMs
         )
         return try Req.Response(serializedBytes: responseData)
+    }
+
+    /// Performs a raw local RPC call.
+    public func call(
+        routeKey: String,
+        payloadType: PayloadType,
+        requestPayload: Data,
+        timeoutMs: Int64 = 30000
+    ) async throws -> Data {
+        try await inner.call(
+            routeKey: routeKey,
+            payloadType: payloadType,
+            requestPayload: requestPayload,
+            timeoutMs: timeoutMs
+        )
     }
 
     /// Discover actors of the specified type
@@ -112,7 +128,8 @@ public final class ActrRef: Sendable {
         await inner.waitForShutdown()
     }
 
-    init(inner: ActrRefWrapper) {
+    init(inner: ActrRefWrapper, retainedWorkload: DynamicWorkload? = nil) {
         self.inner = inner
+        self.retainedWorkload = retainedWorkload
     }
 }
