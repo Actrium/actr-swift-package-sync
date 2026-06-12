@@ -38,8 +38,22 @@ jobs:
         uses: arduino/setup-protoc@v3
         with:
           repo-token: ${{ github.token }}
-      - name: Install UniFFI bindgen
+      - name: Cache uniffi-bindgen binary
+        uses: actions/cache@v4
+        id: cache-uniffi
+        with:
+          path: ~/.cargo/bin/uniffi-bindgen
+          key: uniffi-bindgen-0.31.1-${{ runner.os }}-${{ runner.arch }}
+      - name: Install UniFFI bindgen (if not cached)
+        if: steps.cache-uniffi.outputs.cache-hit != 'true'
         run: cargo install --locked uniffi --version 0.31.1 --features cli --bin uniffi-bindgen
+      - name: Verify uniffi-bindgen binary
+        run: |
+          if [ -f ~/.cargo/bin/uniffi-bindgen ]; then
+            echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          fi
+          which uniffi-bindgen
+          uniffi-bindgen --version
       - name: Install native dependencies
         run: brew install opus
       - name: Build XCFramework
