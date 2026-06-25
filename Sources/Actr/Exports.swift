@@ -3,7 +3,13 @@ import ActrBindings
 /// Re-export commonly used types so applications can `import Actr`.
 public typealias Context = ContextBridge
 public typealias RpcEnvelope = RpcEnvelopeBridge
+public typealias ErrorEvent = ErrorEventBridge
 public typealias Workload = WorkloadLifecycleBridge
+public typealias SignalingObserver = SignalingObserverBridge
+public typealias WebSocketObserver = WebSocketObserverBridge
+public typealias WebRtcObserver = WebRtcObserverBridge
+public typealias CredentialObserver = CredentialObserverBridge
+public typealias MailboxObserver = MailboxObserverBridge
 public typealias DataStream = ActrBindings.DataStream
 public typealias DataStreamCallback = ActrBindings.DataStreamCallback
 public typealias MediaSample = ActrBindings.MediaSample
