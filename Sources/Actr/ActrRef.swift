@@ -36,6 +36,7 @@ public typealias RpcEnvelopeBridge = ActrBindings.RpcEnvelopeBridge
 public typealias ErrorEventBridge = ActrBindings.ErrorEventBridge
 public typealias ErrorCategoryBridge = ActrBindings.ErrorCategoryBridge
 public typealias PeerEventBridge = ActrBindings.PeerEventBridge
+public typealias WebRtcPeerStatusBridge = ActrBindings.WebRtcPeerStatusBridge
 public typealias CredentialEventBridge = ActrBindings.CredentialEventBridge
 public typealias BackpressureEventBridge = ActrBindings.BackpressureEventBridge
 public typealias SignalingObserverBridge = ActrBindings.SignalingObserverBridge

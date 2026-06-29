@@ -2975,6 +2975,11 @@ public struct PeerEventBridge: Equatable, Hashable {
      * `None` for WebSocket (not applicable).
      */
     public var relayed: Bool?
+    /**
+     * Coarse WebRTC send-readiness state. `None` for WebSocket and old
+     * compatibility paths where the status is not available.
+     */
+    public var status: WebRtcPeerStatusBridge?
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
@@ -2985,9 +2990,14 @@ public struct PeerEventBridge: Equatable, Hashable {
         /**
          * `Some(true)` for WebRTC TURN-relayed, `Some(false)` for direct P2P,
          * `None` for WebSocket (not applicable).
-         */relayed: Bool?) {
+         */relayed: Bool?, 
+        /**
+         * Coarse WebRTC send-readiness state. `None` for WebSocket and old
+         * compatibility paths where the status is not available.
+         */status: WebRtcPeerStatusBridge?) {
         self.peer = peer
         self.relayed = relayed
+        self.status = status
     }
 
     
@@ -3007,13 +3017,15 @@ public struct FfiConverterTypePeerEventBridge: FfiConverterRustBuffer {
         return
             try PeerEventBridge(
                 peer: FfiConverterTypeActrId.read(from: &buf), 
-                relayed: FfiConverterOptionBool.read(from: &buf)
+                relayed: FfiConverterOptionBool.read(from: &buf), 
+                status: FfiConverterOptionTypeWebRtcPeerStatusBridge.read(from: &buf)
         )
     }
 
     public static func write(_ value: PeerEventBridge, into buf: inout [UInt8]) {
         FfiConverterTypeActrId.write(value.peer, into: &buf)
         FfiConverterOptionBool.write(value.relayed, into: &buf)
+        FfiConverterOptionTypeWebRtcPeerStatusBridge.write(value.status, into: &buf)
     }
 }
 
@@ -4128,6 +4140,87 @@ public func FfiConverterTypeReconnectReason_lift(_ buf: RustBuffer) throws -> Re
 #endif
 public func FfiConverterTypeReconnectReason_lower(_ value: ReconnectReason) -> RustBuffer {
     return FfiConverterTypeReconnectReason.lower(value)
+}
+
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+
+public enum WebRtcPeerStatusBridge: Equatable, Hashable {
+    
+    case idle
+    case connecting
+    case connected
+    case recovering
+
+
+
+
+
+}
+
+#if compiler(>=6)
+extension WebRtcPeerStatusBridge: Sendable {}
+#endif
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeWebRtcPeerStatusBridge: FfiConverterRustBuffer {
+    typealias SwiftType = WebRtcPeerStatusBridge
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> WebRtcPeerStatusBridge {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .idle
+        
+        case 2: return .connecting
+        
+        case 3: return .connected
+        
+        case 4: return .recovering
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: WebRtcPeerStatusBridge, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .idle:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .connecting:
+            writeInt(&buf, Int32(2))
+        
+        
+        case .connected:
+            writeInt(&buf, Int32(3))
+        
+        
+        case .recovering:
+            writeInt(&buf, Int32(4))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeWebRtcPeerStatusBridge_lift(_ buf: RustBuffer) throws -> WebRtcPeerStatusBridge {
+    return try FfiConverterTypeWebRtcPeerStatusBridge.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeWebRtcPeerStatusBridge_lower(_ value: WebRtcPeerStatusBridge) -> RustBuffer {
+    return FfiConverterTypeWebRtcPeerStatusBridge.lower(value)
 }
 
 
@@ -6121,6 +6214,30 @@ fileprivate struct FfiConverterOptionTypeContextBridge: FfiConverterRustBuffer {
         switch try readInt(&buf) as Int8 {
         case 0: return nil
         case 1: return try FfiConverterTypeContextBridge.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterOptionTypeWebRtcPeerStatusBridge: FfiConverterRustBuffer {
+    typealias SwiftType = WebRtcPeerStatusBridge?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeWebRtcPeerStatusBridge.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeWebRtcPeerStatusBridge.read(from: &buf)
         default: throw UniffiInternalError.unexpectedOptionalTag
         }
     }
