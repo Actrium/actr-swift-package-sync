@@ -1,0 +1,41 @@
+name: Checkout actr source
+description: Clone the actr monorepo at a given ref, optionally verify the expected commit SHA.
+
+inputs:
+  source_ref:
+    required: true
+    description: Branch or tag to clone
+  source_sha:
+    required: false
+    description: Expected commit SHA for verification
+  source_repository:
+    required: false
+    default: https://github.com/Actrium/actr
+    description: Full clone URL of the actr source repository
+
+outputs:
+  resolved_sha:
+    value: ${{ steps.clone.outputs.resolved_sha }}
+    description: Actual HEAD commit SHA after clone
+
+runs:
+  using: composite
+  steps:
+    - id: clone
+      shell: bash
+      env:
+        SOURCE_REF: ${{ inputs.source_ref }}
+        SOURCE_SHA: ${{ inputs.source_sha }}
+        SOURCE_REPOSITORY: ${{ inputs.source_repository }}
+      run: |
+        rm -rf source-checkout
+        git clone --depth 1 --branch "${SOURCE_REF}" "${SOURCE_REPOSITORY}" source-checkout
+        resolved=$(git -C source-checkout rev-parse HEAD)
+        echo "resolved_sha=${resolved}" >> "$GITHUB_OUTPUT"
+        echo "Resolved source sha: ${resolved}"
+        if [ -n "${SOURCE_SHA}" ]; then
+          if [ "${resolved}" != "${SOURCE_SHA}" ]; then
+            echo "error: SHA mismatch — expected ${SOURCE_SHA}, got ${resolved}" >&2
+            exit 1
+          fi
+        fi

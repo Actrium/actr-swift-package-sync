@@ -23,6 +23,26 @@ on:
         required: false
         default: release
         type: string
+      source_repository:
+        description: Full clone URL of the actr source repository.
+        required: false
+        default: https://github.com/Actrium/actr
+        type: string
+      uniffi_version:
+        description: Version of uniffi-bindgen to install.
+        required: false
+        default: "0.31.1"
+        type: string
+      iphoneos_deployment_target:
+        description: IPHONEOS_DEPLOYMENT_TARGET for iOS cargo builds.
+        required: false
+        default: "15.0"
+        type: string
+      macosx_deployment_target:
+        description: MACOSX_DEPLOYMENT_TARGET for cargo builds.
+        required: false
+        default: "12.0"
+        type: string
 
 permissions:
   contents: read
@@ -49,20 +69,27 @@ jobs:
             build_method: cargo
             artifact: actr-lib-aarch64-apple-ios-sim
     steps:
-      - name: Checkout source repository
+      # Reusable workflows run in a bare checkout context — local actions
+      # under .github/actions/ are not available until the caller repo is
+      # checked out. This step materialises the composite action used below.
+      - name: Checkout package-sync (for composite actions)
+        uses: actions/checkout@v4
+      - name: Validate inputs
         env:
-          SOURCE_REPOSITORY: https://github.com/Actrium/actr
-          EXPECTED_SHA: ${{ inputs.source_sha }}
+          BUILD_PROFILE: ${{ inputs.build_profile }}
+          UNIFFI_VERSION: ${{ inputs.uniffi_version }}
         run: |
-          rm -rf source-checkout
-          git clone --depth 1 --branch "${{ inputs.source_ref }}" "${SOURCE_REPOSITORY}" source-checkout
-          actual_sha=$(git -C source-checkout rev-parse HEAD)
-          echo "Resolved source sha: ${actual_sha}"
-          if [ -n "${EXPECTED_SHA}" ]; then
-            test "${actual_sha}" = "${EXPECTED_SHA}"
-          fi
+          case "${BUILD_PROFILE}" in debug|release) exit 0;; *) echo "error: invalid build_profile '${BUILD_PROFILE}'" >&2; exit 1;; esac
+          echo "${UNIFFI_VERSION}" | grep -Eq '^\d+\.\d+\.\d+$' || { echo "error: invalid uniffi_version '${UNIFFI_VERSION}'" >&2; exit 1; }
+      - name: Checkout source repository
+        uses: ./.github/actions/checkout-source
+        id: checkout
+        with:
+          source_ref: ${{ inputs.source_ref }}
+          source_sha: ${{ inputs.source_sha }}
+          source_repository: ${{ inputs.source_repository }}
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@1.88
         with:
           targets: ${{ matrix.target }}
       - name: Cache Rust workspace
@@ -88,10 +115,12 @@ jobs:
         id: cache-uniffi
         with:
           path: ~/.cargo/bin/uniffi-bindgen
-          key: uniffi-bindgen-0.31.1-${{ runner.os }}-${{ runner.arch }}
+          key: uniffi-bindgen-${{ inputs.uniffi_version }}-${{ runner.os }}-${{ runner.arch }}
       - name: Install UniFFI bindgen (if not cached)
         if: matrix.build_method == 'host' && steps.cache-uniffi.outputs.cache-hit != 'true'
-        run: cargo install --locked uniffi --version 0.31.1 --features cli --bin uniffi-bindgen
+        env:
+          UNIFFI_VERSION: ${{ inputs.uniffi_version }}
+        run: cargo install --locked uniffi --version "${UNIFFI_VERSION}" --features cli --bin uniffi-bindgen
       - name: Verify uniffi-bindgen binary
         if: matrix.build_method == 'host'
         run: |
@@ -135,23 +164,34 @@ jobs:
         if: matrix.build_method == 'cargo'
         working-directory: source-checkout
         env:
+          TARGET: ${{ matrix.target }}
+          BUILD_PROFILE: ${{ inputs.build_profile }}
           CMAKE_POLICY_VERSION_MINIMUM: "3.5"
-          # Match the source repo's build-xcframework.sh deployment targets
-          # (and Package.swift's .iOS(.v15) / .macOS(.v12)).
-          IPHONEOS_DEPLOYMENT_TARGET: "15.0"
-          MACOSX_DEPLOYMENT_TARGET: "12.0"
+          IPHONEOS_DEPLOYMENT_TARGET: ${{ inputs.iphoneos_deployment_target }}
+          MACOSX_DEPLOYMENT_TARGET: ${{ inputs.macosx_deployment_target }}
         run: |
           set -e
-          args=(--target ${{ matrix.target }})
-          if [ "${{ inputs.build_profile }}" = "release" ]; then
+          args=(--target "${TARGET}")
+          if [ "${BUILD_PROFILE}" = "release" ]; then
             args+=(--release)
           fi
           env -u SDKROOT cargo build -p libactr "${args[@]}"
       - name: Verify static library
+        env:
+          BUILD_PROFILE: ${{ inputs.build_profile }}
+          TARGET: ${{ matrix.target }}
         run: |
-          profile_dir="${{ inputs.build_profile == 'release' && 'release' || 'debug' }}"
-          lib="source-checkout/target/${{ matrix.target }}/${profile_dir}/libactr.a"
-          test -s "${lib}"
+          set -e
+          if [ "${BUILD_PROFILE}" = "release" ]; then
+            profile_dir="release"
+          else
+            profile_dir="debug"
+          fi
+          lib="source-checkout/target/${TARGET}/${profile_dir}/libactr.a"
+          if [ ! -s "${lib}" ]; then
+            echo "error: missing or empty static library: ${lib}" >&2
+            exit 1
+          fi
           echo "Verified non-empty static library: ${lib}"
       - name: Upload static library
         uses: actions/upload-artifact@v4
@@ -168,24 +208,63 @@ jobs:
           path: source-checkout/bindings/swift/dist/ActrBindings/
           if-no-files-found: error
           retention-days: 7
+      - name: Capture resolved SHA
+        env:
+          RESOLVED_SHA: ${{ steps.checkout.outputs.resolved_sha }}
+        run: printf '%s\n' "${RESOLVED_SHA}" > resolved-sha.txt
+      - name: Upload resolved SHA
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-sha-${{ matrix.artifact }}
+          path: resolved-sha.txt
+          if-no-files-found: error
+          retention-days: 7
 
   assemble:
     name: Assemble XCFramework
     needs: build
     runs-on: macos-latest
     steps:
-      - name: Checkout source repository
+      - name: Download resolved SHAs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: source-sha-*
+          path: sha-artifacts
+      - name: Verify SHA consistency
         env:
-          SOURCE_REPOSITORY: https://github.com/Actrium/actr
           EXPECTED_SHA: ${{ inputs.source_sha }}
         run: |
-          rm -rf source-checkout
-          git clone --depth 1 --branch "${{ inputs.source_ref }}" "${SOURCE_REPOSITORY}" source-checkout
-          actual_sha=$(git -C source-checkout rev-parse HEAD)
-          echo "Resolved source sha: ${actual_sha}"
-          if [ -n "${EXPECTED_SHA}" ]; then
-            test "${actual_sha}" = "${EXPECTED_SHA}"
+          set -e
+          shas=()
+          for f in sha-artifacts/*/resolved-sha.txt; do
+            s=$(cat "$f")
+            echo "SHA from $(basename "$(dirname "$f")"): ${s}"
+            shas+=("$s")
+          done
+          first="${shas[0]}"
+          for s in "${shas[@]:1}"; do
+            if [ "$s" != "$first" ]; then
+              echo "error: SHA mismatch across matrix jobs — ${first} vs ${s}" >&2
+              exit 1
+            fi
+          done
+          if [ -n "${EXPECTED_SHA}" ] && [ "$first" != "${EXPECTED_SHA}" ]; then
+            echo "error: resolved SHA ${first} does not match expected ${EXPECTED_SHA}" >&2
+            exit 1
           fi
+          echo "All matrix jobs resolved to SHA: ${first}"
+          echo "${first}" > resolved-sha.txt
+      - name: Checkout source at resolved SHA
+        env:
+          SOURCE_REPOSITORY: ${{ inputs.source_repository }}
+        run: |
+          set -e
+          SHA=$(cat resolved-sha.txt)
+          echo "Checking out source at resolved sha: ${SHA}"
+          rm -rf source-checkout
+          git clone --depth 1 "${SOURCE_REPOSITORY}" source-checkout
+          git -C source-checkout fetch --depth 1 origin "${SHA}"
+          git -C source-checkout checkout "${SHA}"
       - name: Download macOS static library
         uses: actions/download-artifact@v4
         with:
