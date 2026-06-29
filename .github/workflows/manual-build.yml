@@ -13,59 +13,8 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Validate package-sync repository
-        run: |
-          test -f Package.swift
-          test -f .github/workflows/manual-build.yml
-      - name: Checkout source repository
-        env:
-          SOURCE_REPOSITORY: https://github.com/Actrium/actr
-        run: |
-          rm -rf source-checkout
-          git clone --depth 1 --branch "${{ inputs.source_ref }}" "${SOURCE_REPOSITORY}" source-checkout
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-apple-ios,aarch64-apple-ios-sim,aarch64-apple-darwin
-      - uses: Swatinem/rust-cache@v2
-        with:
-          cache-directories: "~/.cargo/bin"
-      - name: Install protoc
-        uses: arduino/setup-protoc@v3
-        with:
-          repo-token: ${{ github.token }}
-      - name: Cache uniffi-bindgen binary
-        uses: actions/cache@v4
-        id: cache-uniffi
-        with:
-          path: ~/.cargo/bin/uniffi-bindgen
-          key: uniffi-bindgen-0.31.1-${{ runner.os }}-${{ runner.arch }}
-      - name: Install UniFFI bindgen (if not cached)
-        if: steps.cache-uniffi.outputs.cache-hit != 'true'
-        run: cargo install --locked uniffi --version 0.31.1 --features cli --bin uniffi-bindgen
-      - name: Verify uniffi-bindgen binary
-        run: |
-          if [ -f ~/.cargo/bin/uniffi-bindgen ]; then
-            echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
-          fi
-          which uniffi-bindgen
-          uniffi-bindgen --version
-      - name: Install native dependencies
-        run: brew install opus
-      - name: Build XCFramework
-        working-directory: source-checkout/bindings/swift
-        env:
-          ACTR_BUILD_PROFILE: debug
-          ACTR_BINDINGS_PATH: dist/ActrBindings
-          ACTR_BINARY_PATH: dist/ActrFFI.xcframework
-          CMAKE_POLICY_VERSION_MINIMUM: "3.5"
-        run: ./build-xcframework.sh
-      - name: Build Swift package
-        env:
-          ACTR_BINDINGS_PATH: dist/ActrBindings
-          ACTR_BINARY_PATH: dist/ActrFFI.xcframework
-        run: swift build --package-path source-checkout/bindings/swift
+  build-xcframework:
+    uses: ./.github/workflows/build-xcframework.yml
+    with:
+      source_ref: ${{ inputs.source_ref }}
+      build_profile: debug

@@ -1,0 +1,281 @@
+name: Build ActrFFI XCFramework
+
+# Reusable workflow that builds the ActrFFI XCFramework from the actr monorepo.
+#
+# Used by release.yml (build_profile=release) and manual-build.yml
+# (build_profile=debug). Each Apple target is built in its own matrix job so
+# the slow Rust compilations run in parallel instead of fighting over one
+# runner, and so a single failing target blocks the assembly step.
+
+on:
+  workflow_call:
+    inputs:
+      source_ref:
+        description: Source ref (branch/tag) from the actr monorepo.
+        required: true
+        type: string
+      source_sha:
+        description: Expected source commit sha. When set, the checkout is verified against it.
+        required: false
+        type: string
+      build_profile:
+        description: Cargo build profile (debug or release).
+        required: false
+        default: release
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Host target builds via the source repo's build-xcframework.sh so we
+          # reuse its UniFFI binding generation and Swift 6 patching. Limited to
+          # the macOS slice via ACTR_XCFRAMEWORK_TARGETS=macos.
+          - target: aarch64-apple-darwin
+            build_method: host
+            artifact: actr-lib-aarch64-apple-darwin
+          # iOS targets are plain cargo builds; no binding generation needed.
+          - target: aarch64-apple-ios
+            build_method: cargo
+            artifact: actr-lib-aarch64-apple-ios
+          - target: aarch64-apple-ios-sim
+            build_method: cargo
+            artifact: actr-lib-aarch64-apple-ios-sim
+    steps:
+      - name: Checkout source repository
+        env:
+          SOURCE_REPOSITORY: https://github.com/Actrium/actr
+          EXPECTED_SHA: ${{ inputs.source_sha }}
+        run: |
+          rm -rf source-checkout
+          git clone --depth 1 --branch "${{ inputs.source_ref }}" "${SOURCE_REPOSITORY}" source-checkout
+          actual_sha=$(git -C source-checkout rev-parse HEAD)
+          echo "Resolved source sha: ${actual_sha}"
+          if [ -n "${EXPECTED_SHA}" ]; then
+            test "${actual_sha}" = "${EXPECTED_SHA}"
+          fi
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Cache Rust workspace
+        uses: Swatinem/rust-cache@v2
+        with:
+          # Cargo runs inside the cloned actr workspace, so the target dir is
+          # source-checkout/target. Map it explicitly instead of letting
+          # rust-cache run cargo metadata from the package-sync root (which has
+          # no Cargo.toml and would fail to key the cache).
+          workspaces: source-checkout -> target
+          key: ${{ matrix.target }}-${{ inputs.build_profile }}
+          cache-targets: true
+          cache-directories: "~/.cargo/bin"
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ github.token }}
+      - name: Install native dependencies
+        run: brew install opus
+      - name: Cache uniffi-bindgen binary
+        if: matrix.build_method == 'host'
+        uses: actions/cache@v4
+        id: cache-uniffi
+        with:
+          path: ~/.cargo/bin/uniffi-bindgen
+          key: uniffi-bindgen-0.31.1-${{ runner.os }}-${{ runner.arch }}
+      - name: Install UniFFI bindgen (if not cached)
+        if: matrix.build_method == 'host' && steps.cache-uniffi.outputs.cache-hit != 'true'
+        run: cargo install --locked uniffi --version 0.31.1 --features cli --bin uniffi-bindgen
+      - name: Verify uniffi-bindgen binary
+        if: matrix.build_method == 'host'
+        run: |
+          if [ -f ~/.cargo/bin/uniffi-bindgen ]; then
+            echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          fi
+          which uniffi-bindgen
+          uniffi-bindgen --version
+      - name: Build host target and generate UniFFI bindings
+        if: matrix.build_method == 'host'
+        working-directory: source-checkout/bindings/swift
+        env:
+          ACTR_BUILD_PROFILE: ${{ inputs.build_profile }}
+          ACTR_XCFRAMEWORK_TARGETS: macos
+          ACTR_BINDINGS_PATH: dist/ActrBindings
+          ACTR_BINARY_PATH: dist/ActrFFI.xcframework
+          CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+        run: ./build-xcframework.sh
+      - name: Restrict libactr to staticlib (cargo target only)
+        if: matrix.build_method == 'cargo'
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          # The libactr crate declares crate-type = [cdylib, staticlib], so a
+          # plain cargo build also links the cdylib. On the Xcode 26 runner the
+          # iOS device cdylib link fails: ___chkstk_darwin (a compiler-rt
+          # builtin) is not pulled in automatically. We only ship libactr.a, so
+          # constrain the CLONE to staticlib only and skip the cdylib link
+          # entirely. This edits the checked-out clone, not the actr source repo.
+          path = Path("source-checkout/bindings/ffi/Cargo.toml")
+          text = path.read_text()
+          new = re.sub(r'crate-type\s*=\s*\[[^\]]*\]', 'crate-type = ["staticlib"]', text)
+          if new == text:
+              raise SystemExit("error: could not find crate-type in bindings/ffi/Cargo.toml")
+          path.write_text(new)
+          print('Set libactr crate-type to ["staticlib"] for static archive build')
+          PY
+      - name: Build cargo target
+        if: matrix.build_method == 'cargo'
+        working-directory: source-checkout
+        env:
+          CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+          # Match the source repo's build-xcframework.sh deployment targets
+          # (and Package.swift's .iOS(.v15) / .macOS(.v12)).
+          IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+          MACOSX_DEPLOYMENT_TARGET: "12.0"
+        run: |
+          set -e
+          args=(--target ${{ matrix.target }})
+          if [ "${{ inputs.build_profile }}" = "release" ]; then
+            args+=(--release)
+          fi
+          env -u SDKROOT cargo build -p libactr "${args[@]}"
+      - name: Verify static library
+        run: |
+          profile_dir="${{ inputs.build_profile == 'release' && 'release' || 'debug' }}"
+          lib="source-checkout/target/${{ matrix.target }}/${profile_dir}/libactr.a"
+          test -s "${lib}"
+          echo "Verified non-empty static library: ${lib}"
+      - name: Upload static library
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: source-checkout/target/${{ matrix.target }}/${{ inputs.build_profile == 'release' && 'release' || 'debug' }}/libactr.a
+          if-no-files-found: error
+          retention-days: 7
+      - name: Upload UniFFI bindings (host only)
+        if: matrix.build_method == 'host'
+        uses: actions/upload-artifact@v4
+        with:
+          name: actr-bindings
+          path: source-checkout/bindings/swift/dist/ActrBindings/
+          if-no-files-found: error
+          retention-days: 7
+
+  assemble:
+    name: Assemble XCFramework
+    needs: build
+    runs-on: macos-latest
+    steps:
+      - name: Checkout source repository
+        env:
+          SOURCE_REPOSITORY: https://github.com/Actrium/actr
+          EXPECTED_SHA: ${{ inputs.source_sha }}
+        run: |
+          rm -rf source-checkout
+          git clone --depth 1 --branch "${{ inputs.source_ref }}" "${SOURCE_REPOSITORY}" source-checkout
+          actual_sha=$(git -C source-checkout rev-parse HEAD)
+          echo "Resolved source sha: ${actual_sha}"
+          if [ -n "${EXPECTED_SHA}" ]; then
+            test "${actual_sha}" = "${EXPECTED_SHA}"
+          fi
+      - name: Download macOS static library
+        uses: actions/download-artifact@v4
+        with:
+          name: actr-lib-aarch64-apple-darwin
+          path: libs/aarch64-apple-darwin
+      - name: Download iOS device static library
+        uses: actions/download-artifact@v4
+        with:
+          name: actr-lib-aarch64-apple-ios
+          path: libs/aarch64-apple-ios
+      - name: Download iOS simulator static library
+        uses: actions/download-artifact@v4
+        with:
+          name: actr-lib-aarch64-apple-ios-sim
+          path: libs/aarch64-apple-ios-sim
+      - name: Download UniFFI bindings
+        uses: actions/download-artifact@v4
+        with:
+          name: actr-bindings
+          path: source-checkout/bindings/swift/dist/ActrBindings
+      - name: Validate build inputs
+        run: |
+          set -e
+          bindings="source-checkout/bindings/swift/dist/ActrBindings"
+          headers="${bindings}/include"
+          for f in \
+            "libs/aarch64-apple-darwin/libactr.a" \
+            "libs/aarch64-apple-ios/libactr.a" \
+            "libs/aarch64-apple-ios-sim/libactr.a" \
+            "${bindings}/Actr.swift" \
+            "${headers}/actrFFI.h" \
+            "${bindings}/actrFFI.modulemap"; do
+            if [ ! -s "${f}" ]; then
+              echo "error: missing or empty: ${f}" >&2
+              exit 1
+            fi
+            echo "ok: ${f}"
+          done
+      - name: Create XCFramework
+        run: |
+          set -e
+          dist="source-checkout/bindings/swift/dist"
+          headers="${dist}/ActrBindings/include"
+          rm -rf "${dist}/ActrFFI.xcframework"
+          xcodebuild -create-xcframework \
+            -library "libs/aarch64-apple-darwin/libactr.a" -headers "${headers}" \
+            -library "libs/aarch64-apple-ios/libactr.a" -headers "${headers}" \
+            -library "libs/aarch64-apple-ios-sim/libactr.a" -headers "${headers}" \
+            -output "${dist}/ActrFFI.xcframework"
+      - name: Validate XCFramework slices
+        run: |
+          python3 - <<'PY'
+          import plistlib
+          from pathlib import Path
+
+          info = Path("source-checkout/bindings/swift/dist/ActrFFI.xcframework/Info.plist")
+          if not info.is_file():
+              raise SystemExit("error: XCFramework Info.plist missing")
+
+          data = plistlib.loads(info.read_bytes())
+          libs = {
+              (lib.get("SupportedPlatform"), lib.get("SupportedPlatformVariant")): lib
+              for lib in data.get("AvailableLibraries", [])
+          }
+
+          expected = {
+              ("macos", None),
+              ("ios", None),
+              ("ios", "simulator"),
+          }
+          missing = expected - set(libs)
+          if missing:
+              raise SystemExit(f"error: missing XCFramework slices: {sorted(map(str, missing))}")
+
+          for (platform, variant), lib in sorted(libs.items(), key=lambda kv: str(kv)):
+              label = f"{platform}{('-' + variant) if variant else ''}"
+              print(f"ok: slice {label} -> {lib.get('LibraryIdentifier')}")
+          PY
+      - name: Build Swift package
+        working-directory: source-checkout/bindings/swift
+        env:
+          ACTR_BINDINGS_PATH: dist/ActrBindings
+          ACTR_BINARY_PATH: dist/ActrFFI.xcframework
+        run: swift build
+      - name: Upload assembled distribution
+        uses: actions/upload-artifact@v4
+        with:
+          name: actr-swift-dist
+          path: |
+            source-checkout/bindings/swift/dist/ActrFFI.xcframework
+            source-checkout/bindings/swift/dist/ActrBindings
+          if-no-files-found: error
+          retention-days: 7
