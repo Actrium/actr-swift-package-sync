@@ -48,7 +48,7 @@ jobs:
           SOURCE_SHA: ${{ inputs.source_sha }}
           SOURCE_TAG: ${{ inputs.source_tag }}
         run: |
-          echo "${VERSION}" | grep -Eq '^\d+\.\d+\.\d+$' || { echo "error: invalid version format '${VERSION}'" >&2; exit 1; }
+          echo "${VERSION}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "error: invalid version format '${VERSION}'" >&2; exit 1; }
           echo "${SOURCE_SHA}" | grep -Eq '^[a-f0-9]{40}$' || { echo "error: invalid source_sha format" >&2; exit 1; }
           echo "${SOURCE_TAG}" | grep -Eq '^[a-zA-Z0-9._/-]+$' || { echo "error: invalid source_tag format '${SOURCE_TAG}'" >&2; exit 1; }
       - name: Checkout source repository

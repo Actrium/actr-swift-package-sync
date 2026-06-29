@@ -80,7 +80,7 @@ jobs:
           UNIFFI_VERSION: ${{ inputs.uniffi_version }}
         run: |
           case "${BUILD_PROFILE}" in debug|release) exit 0;; *) echo "error: invalid build_profile '${BUILD_PROFILE}'" >&2; exit 1;; esac
-          echo "${UNIFFI_VERSION}" | grep -Eq '^\d+\.\d+\.\d+$' || { echo "error: invalid uniffi_version '${UNIFFI_VERSION}'" >&2; exit 1; }
+          echo "${UNIFFI_VERSION}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "error: invalid uniffi_version '${UNIFFI_VERSION}'" >&2; exit 1; }
       - name: Checkout source repository
         uses: ./.github/actions/checkout-source
         id: checkout
