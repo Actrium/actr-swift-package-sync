@@ -12,6 +12,19 @@ public typealias MediaTrackCallback = ActrBindings.MediaTrackCallback
 public typealias OpusEncoder = ActrBindings.OpusEncoder
 public typealias LogCallback = ActrBindings.LogCallback
 
+/// Resolve the package's own ActrType from a manifest.toml file.
+public func resolveManifestPackageActrType(manifestPath: String) throws -> ActrType {
+    try ActrBindings.resolveManifestPackageActrType(manifestPath: manifestPath)
+}
+
+/// Resolve a dependency ActrType from a manifest.toml file.
+public func resolveManifestDependency(manifestPath: String, dependencyAlias: String) throws -> ActrType {
+    try ActrBindings.resolveManifestDependency(
+        manifestPath: manifestPath,
+        dependencyAlias: dependencyAlias
+    )
+}
+
 /// Creates a linked-runtime workload from lifecycle/dispatch and optional observers.
 public func dynamicWorkload(
     lifecycle: Workload,
