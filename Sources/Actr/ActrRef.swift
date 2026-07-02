@@ -1,54 +1,13 @@
-/// Re-exported UniFFI bindings and high-level API wrappers.
+/// High-level actor reference and error helpers.
 ///
-/// This file provides a clean interface to the auto-generated UniFFI bindings
-/// from `ActrBindings/Actr.swift`. Only the types and functions actually used
-/// by the high-level Swift API are re-exported here.
+/// Public type aliases for the auto-generated UniFFI bindings are centralized
+/// in `Aliases.swift`.
 
 import ActrBindings
 import Foundation
 import SwiftProtobuf
 
-// Re-export core wrapper types used by the high-level API
-public typealias ActrRefWrapper = ActrBindings.ActrRefWrapper
-public typealias NetworkEventHandleWrapper = ActrBindings.NetworkEventHandleWrapper
-public typealias NetworkAvailability = ActrBindings.NetworkAvailability
-public typealias NetworkTransportFlags = ActrBindings.NetworkTransportFlags
-public typealias NetworkSnapshot = ActrBindings.NetworkSnapshot
-public typealias AppLifecycleState = ActrBindings.AppLifecycleState
-public typealias CleanupReason = ActrBindings.CleanupReason
-public typealias ReconnectReason = ActrBindings.ReconnectReason
-public typealias NetworkEvent = ActrBindings.NetworkEvent
-public typealias NetworkEventResult = ActrBindings.NetworkEventResult
-
 // Observability is automatically initialized when creating ActrNode from a config file.
-
-// Re-export error types
-public typealias ActrError = ActrBindings.ActrError
-public typealias ConnectionNotReadyInfo = ActrBindings.ConnectionNotReadyInfo
-public typealias ErrorKind = ActrBindings.ErrorKind
-
-// Re-export protocol types used by the bridge
-public typealias ContextBridge = ActrBindings.ContextBridge
-public typealias WorkloadLifecycleBridge = ActrBindings.WorkloadLifecycleBridge
-public typealias DynamicWorkload = ActrBindings.DynamicWorkload
-public typealias RuntimeObservers = ActrBindings.RuntimeObservers
-public typealias RpcEnvelopeBridge = ActrBindings.RpcEnvelopeBridge
-public typealias ErrorEventBridge = ActrBindings.ErrorEventBridge
-public typealias ErrorCategoryBridge = ActrBindings.ErrorCategoryBridge
-public typealias PeerEventBridge = ActrBindings.PeerEventBridge
-public typealias WebRtcPeerStatusBridge = ActrBindings.WebRtcPeerStatusBridge
-public typealias CredentialEventBridge = ActrBindings.CredentialEventBridge
-public typealias BackpressureEventBridge = ActrBindings.BackpressureEventBridge
-public typealias SignalingObserverBridge = ActrBindings.SignalingObserverBridge
-public typealias WebSocketObserverBridge = ActrBindings.WebSocketObserverBridge
-public typealias WebRtcObserverBridge = ActrBindings.WebRtcObserverBridge
-public typealias CredentialObserverBridge = ActrBindings.CredentialObserverBridge
-public typealias MailboxObserverBridge = ActrBindings.MailboxObserverBridge
-
-// Re-export data types
-public typealias ActrId = ActrBindings.ActrId
-public typealias ActrType = ActrBindings.ActrType
-public typealias PayloadType = ActrBindings.PayloadType
 
 /// Returns the fault-domain classification for an ACTR error.
 public func actrErrorKind(_ error: ActrError) -> ErrorKind {
