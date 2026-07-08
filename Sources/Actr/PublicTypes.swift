@@ -259,7 +259,7 @@ public enum ErrorCategory: Equatable, Hashable, Sendable {
     case handlerError
     case signalingFailure
     case transportFailure
-    case dataStreamDeliveryUncertain
+    case dataChunkDeliveryUncertain
 
     init(bridge: ActrBindings.ErrorCategoryBridge) {
         switch bridge {
@@ -271,8 +271,8 @@ public enum ErrorCategory: Equatable, Hashable, Sendable {
             self = .signalingFailure
         case .transportFailure:
             self = .transportFailure
-        case .dataStreamDeliveryUncertain:
-            self = .dataStreamDeliveryUncertain
+        case .dataChunkDeliveryUncertain:
+            self = .dataChunkDeliveryUncertain
         }
     }
 
@@ -286,8 +286,8 @@ public enum ErrorCategory: Equatable, Hashable, Sendable {
             return .signalingFailure
         case .transportFailure:
             return .transportFailure
-        case .dataStreamDeliveryUncertain:
-            return .dataStreamDeliveryUncertain
+        case .dataChunkDeliveryUncertain:
+            return .dataChunkDeliveryUncertain
         }
     }
 }
@@ -465,7 +465,7 @@ public struct MetadataEntry: Equatable, Hashable, Sendable {
     }
 }
 
-public struct DataStream: Equatable, Hashable, Sendable {
+public struct DataChunk: Equatable, Hashable, Sendable {
     public var streamId: String
     public var sequence: UInt64
     public var payload: Data
@@ -486,7 +486,7 @@ public struct DataStream: Equatable, Hashable, Sendable {
         self.timestampMs = timestampMs
     }
 
-    init(bridge: ActrBindings.DataStream) {
+    init(bridge: ActrBindings.DataChunk) {
         self.init(
             streamId: bridge.streamId,
             sequence: bridge.sequence,
@@ -496,8 +496,8 @@ public struct DataStream: Equatable, Hashable, Sendable {
         )
     }
 
-    var bridge: ActrBindings.DataStream {
-        ActrBindings.DataStream(
+    var bridge: ActrBindings.DataChunk {
+        ActrBindings.DataChunk(
             streamId: streamId,
             sequence: sequence,
             payload: payload,

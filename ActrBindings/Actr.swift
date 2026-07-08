@@ -1120,9 +1120,9 @@ public protocol ContextBridgeProtocol: AnyObject, Sendable {
     func registerMediaTrack(trackId: String, callback: MediaTrackCallback) async throws 
     
     /**
-     * Register a DataStream callback for a stream ID.
+     * Register a DataChunk callback for a stream ID.
      */
-    func registerStream(streamId: String, callback: DataStreamCallback) async throws 
+    func registerStream(streamId: String, callback: DataChunkCallback) async throws 
     
     /**
      * Remove a media track from the WebRTC connection with the target.
@@ -1130,14 +1130,14 @@ public protocol ContextBridgeProtocol: AnyObject, Sendable {
     func removeMediaTrack(target: ActrId, trackId: String) async throws 
     
     /**
-     * Send a DataStream to a remote actor (Fast Path)
+     * Send a DataChunk to a remote actor (Fast Path)
      *
      * # Arguments
      * - `target`: Target actor ID
-     * - `chunk`: DataStream containing stream_id, sequence, payload, etc.
+     * - `chunk`: DataChunk containing stream_id, sequence, payload, etc.
      * - `payload_type`: Stream lane selection for delivery guarantees.
      */
-    func sendDataStream(target: ActrId, chunk: DataStream, payloadType: PayloadType) async throws 
+    func sendDataChunk(target: ActrId, chunk: DataChunk, payloadType: PayloadType) async throws 
     
     /**
      * Send a media sample via WebRTC native RTP track
@@ -1161,7 +1161,7 @@ public protocol ContextBridgeProtocol: AnyObject, Sendable {
     func unregisterMediaTrack(trackId: String) async throws 
     
     /**
-     * Unregister a DataStream callback for a stream ID.
+     * Unregister a DataChunk callback for a stream ID.
      */
     func unregisterStream(streamId: String) async throws 
     
@@ -1319,15 +1319,15 @@ open func registerMediaTrack(trackId: String, callback: MediaTrackCallback)async
 }
     
     /**
-     * Register a DataStream callback for a stream ID.
+     * Register a DataChunk callback for a stream ID.
      */
-open func registerStream(streamId: String, callback: DataStreamCallback)async throws   {
+open func registerStream(streamId: String, callback: DataChunkCallback)async throws   {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_actr_fn_method_contextbridge_register_stream(
                     self.uniffiCloneHandle(),
-                    FfiConverterString.lower(streamId),FfiConverterCallbackInterfaceDataStreamCallback_lower(callback)
+                    FfiConverterString.lower(streamId),FfiConverterCallbackInterfaceDataChunkCallback_lower(callback)
                 )
             },
             pollFunc: ffi_actr_rust_future_poll_void,
@@ -1359,20 +1359,20 @@ open func removeMediaTrack(target: ActrId, trackId: String)async throws   {
 }
     
     /**
-     * Send a DataStream to a remote actor (Fast Path)
+     * Send a DataChunk to a remote actor (Fast Path)
      *
      * # Arguments
      * - `target`: Target actor ID
-     * - `chunk`: DataStream containing stream_id, sequence, payload, etc.
+     * - `chunk`: DataChunk containing stream_id, sequence, payload, etc.
      * - `payload_type`: Stream lane selection for delivery guarantees.
      */
-open func sendDataStream(target: ActrId, chunk: DataStream, payloadType: PayloadType)async throws   {
+open func sendDataChunk(target: ActrId, chunk: DataChunk, payloadType: PayloadType)async throws   {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
-                uniffi_actr_fn_method_contextbridge_send_data_stream(
+                uniffi_actr_fn_method_contextbridge_send_data_chunk(
                     self.uniffiCloneHandle(),
-                    FfiConverterTypeActrId_lower(target),FfiConverterTypeDataStream_lower(chunk),FfiConverterTypePayloadType_lower(payloadType)
+                    FfiConverterTypeActrId_lower(target),FfiConverterTypeDataChunk_lower(chunk),FfiConverterTypePayloadType_lower(payloadType)
                 )
             },
             pollFunc: ffi_actr_rust_future_poll_void,
@@ -1450,7 +1450,7 @@ open func unregisterMediaTrack(trackId: String)async throws   {
 }
     
     /**
-     * Unregister a DataStream callback for a stream ID.
+     * Unregister a DataChunk callback for a stream ID.
      */
 open func unregisterStream(streamId: String)async throws   {
     return
@@ -2447,14 +2447,14 @@ public func FfiConverterTypeCredentialEventBridge_lower(_ value: CredentialEvent
 
 
 /**
- * DataStream for fast-path data transmission
+ * DataChunk for fast-path data transmission
  *
  * Used for streaming application data (non-media):
  * - File transfer chunks
  * - Game state updates
  * - Custom protocol streams
  */
-public struct DataStream: Equatable, Hashable {
+public struct DataChunk: Equatable, Hashable {
     /**
      * Stream identifier (globally unique)
      */
@@ -2507,16 +2507,16 @@ public struct DataStream: Equatable, Hashable {
 }
 
 #if compiler(>=6)
-extension DataStream: Sendable {}
+extension DataChunk: Sendable {}
 #endif
 
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public struct FfiConverterTypeDataStream: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> DataStream {
+public struct FfiConverterTypeDataChunk: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> DataChunk {
         return
-            try DataStream(
+            try DataChunk(
                 streamId: FfiConverterString.read(from: &buf), 
                 sequence: FfiConverterUInt64.read(from: &buf), 
                 payload: FfiConverterData.read(from: &buf), 
@@ -2525,7 +2525,7 @@ public struct FfiConverterTypeDataStream: FfiConverterRustBuffer {
         )
     }
 
-    public static func write(_ value: DataStream, into buf: inout [UInt8]) {
+    public static func write(_ value: DataChunk, into buf: inout [UInt8]) {
         FfiConverterString.write(value.streamId, into: &buf)
         FfiConverterUInt64.write(value.sequence, into: &buf)
         FfiConverterData.write(value.payload, into: &buf)
@@ -2538,15 +2538,15 @@ public struct FfiConverterTypeDataStream: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public func FfiConverterTypeDataStream_lift(_ buf: RustBuffer) throws -> DataStream {
-    return try FfiConverterTypeDataStream.lift(buf)
+public func FfiConverterTypeDataChunk_lift(_ buf: RustBuffer) throws -> DataChunk {
+    return try FfiConverterTypeDataChunk.lift(buf)
 }
 
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public func FfiConverterTypeDataStream_lower(_ value: DataStream) -> RustBuffer {
-    return FfiConverterTypeDataStream.lower(value)
+public func FfiConverterTypeDataChunk_lower(_ value: DataChunk) -> RustBuffer {
+    return FfiConverterTypeDataChunk.lower(value)
 }
 
 
@@ -2709,7 +2709,7 @@ public func FfiConverterTypeMediaSample_lower(_ value: MediaSample) -> RustBuffe
 
 
 /**
- * Metadata entry for DataStream
+ * Metadata entry for DataChunk
  */
 public struct MetadataEntry: Equatable, Hashable {
     public var key: String
@@ -3538,7 +3538,7 @@ public enum ErrorCategoryBridge: Equatable, Hashable {
     case handlerError
     case signalingFailure
     case transportFailure
-    case dataStreamDeliveryUncertain
+    case dataChunkDeliveryUncertain
 
 
 
@@ -3568,7 +3568,7 @@ public struct FfiConverterTypeErrorCategoryBridge: FfiConverterRustBuffer {
         
         case 4: return .transportFailure
         
-        case 5: return .dataStreamDeliveryUncertain
+        case 5: return .dataChunkDeliveryUncertain
         
         default: throw UniffiInternalError.unexpectedEnumCase
         }
@@ -3594,7 +3594,7 @@ public struct FfiConverterTypeErrorCategoryBridge: FfiConverterRustBuffer {
             writeInt(&buf, Int32(4))
         
         
-        case .dataStreamDeliveryUncertain:
+        case .dataChunkDeliveryUncertain:
             writeInt(&buf, Int32(5))
         
         }
@@ -3965,7 +3965,7 @@ public func FfiConverterTypeNetworkEvent_lower(_ value: NetworkEvent) -> RustBuf
  * Determines which WebRTC channel/track to use for data transmission:
  * - `RpcReliable`: Reliable ordered channel (default for RPC)
  * - `RpcSignal`: Signaling channel for RPC
- * - `StreamReliable`: Reliable stream for DataStream
+ * - `StreamReliable`: Reliable stream for DataChunk
  * - `StreamLatencyFirst`: Low-latency stream (may drop packets)
  * - `MediaRtp`: Native RTP track for media
  */
@@ -4424,38 +4424,38 @@ public func FfiConverterCallbackInterfaceCredentialObserverBridge_lower(_ v: Cre
 
 
 /**
- * Callback interface for DataStream events.
+ * Callback interface for DataChunk events.
  */
-public protocol DataStreamCallback: AnyObject, Sendable {
+public protocol DataChunkCallback: AnyObject, Sendable {
     
     /**
-     * Handle an incoming DataStream chunk.
+     * Handle an incoming DataChunk.
      */
-    func onStream(chunk: DataStream, sender: ActrId) async throws 
+    func onStream(chunk: DataChunk, sender: ActrId) async throws 
     
 }
 
 
 // Put the implementation in a struct so we don't pollute the top-level namespace
-fileprivate struct UniffiCallbackInterfaceDataStreamCallback {
+fileprivate struct UniffiCallbackInterfaceDataChunkCallback {
 
     // Create the VTable using a series of closures.
     // Swift automatically converts these into C callback functions.
     //
     // Store the vtable directly.
-    static let vtable: UniffiVTableCallbackInterfaceDataStreamCallback = UniffiVTableCallbackInterfaceDataStreamCallback(
+    static let vtable: UniffiVTableCallbackInterfaceDataChunkCallback = UniffiVTableCallbackInterfaceDataChunkCallback(
         uniffiFree: { (uniffiHandle: UInt64) -> () in
             do {
-                try FfiConverterCallbackInterfaceDataStreamCallback.handleMap.remove(handle: uniffiHandle)
+                try FfiConverterCallbackInterfaceDataChunkCallback.handleMap.remove(handle: uniffiHandle)
             } catch {
-                print("Uniffi callback interface DataStreamCallback: handle missing in uniffiFree")
+                print("Uniffi callback interface DataChunkCallback: handle missing in uniffiFree")
             }
         },
         uniffiClone: { (uniffiHandle: UInt64) -> UInt64 in
             do {
-                return try FfiConverterCallbackInterfaceDataStreamCallback.handleMap.clone(handle: uniffiHandle)
+                return try FfiConverterCallbackInterfaceDataChunkCallback.handleMap.clone(handle: uniffiHandle)
             } catch {
-                fatalError("Uniffi callback interface DataStreamCallback: handle missing in uniffiClone")
+                fatalError("Uniffi callback interface DataChunkCallback: handle missing in uniffiClone")
             }
         },
         onStream: { (
@@ -4468,11 +4468,11 @@ fileprivate struct UniffiCallbackInterfaceDataStreamCallback {
         ) in
             let makeCall = {
                 () async throws -> () in
-                guard let uniffiObj = try? FfiConverterCallbackInterfaceDataStreamCallback.handleMap.get(handle: uniffiHandle) else {
+                guard let uniffiObj = try? FfiConverterCallbackInterfaceDataChunkCallback.handleMap.get(handle: uniffiHandle) else {
                     throw UniffiInternalError.unexpectedStaleHandle
                 }
                 return try await uniffiObj.onStream(
-                     chunk: try FfiConverterTypeDataStream_lift(chunk),
+                     chunk: try FfiConverterTypeDataChunk_lift(chunk),
                      sender: try FfiConverterTypeActrId_lift(sender)
                 )
             }
@@ -4505,30 +4505,30 @@ fileprivate struct UniffiCallbackInterfaceDataStreamCallback {
 
     // Rust stores this pointer for future callback invocations, so it must live
     // for the process lifetime (not just for the init function call).
-    nonisolated(unsafe) static let vtablePtr: UnsafePointer<UniffiVTableCallbackInterfaceDataStreamCallback> = {
-        let ptr = UnsafeMutablePointer<UniffiVTableCallbackInterfaceDataStreamCallback>.allocate(capacity: 1)
+    nonisolated(unsafe) static let vtablePtr: UnsafePointer<UniffiVTableCallbackInterfaceDataChunkCallback> = {
+        let ptr = UnsafeMutablePointer<UniffiVTableCallbackInterfaceDataChunkCallback>.allocate(capacity: 1)
         ptr.initialize(to: vtable)
         return UnsafePointer(ptr)
     }()
 }
 
-private func uniffiCallbackInitDataStreamCallback() {
-    uniffi_actr_fn_init_callback_vtable_datastreamcallback(UniffiCallbackInterfaceDataStreamCallback.vtablePtr)
+private func uniffiCallbackInitDataChunkCallback() {
+    uniffi_actr_fn_init_callback_vtable_datachunkcallback(UniffiCallbackInterfaceDataChunkCallback.vtablePtr)
 }
 
 // FfiConverter protocol for callback interfaces
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-fileprivate struct FfiConverterCallbackInterfaceDataStreamCallback {
-    fileprivate static let handleMap = UniffiHandleMap<DataStreamCallback>()
+fileprivate struct FfiConverterCallbackInterfaceDataChunkCallback {
+    fileprivate static let handleMap = UniffiHandleMap<DataChunkCallback>()
 }
 
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-extension FfiConverterCallbackInterfaceDataStreamCallback : FfiConverter {
-    typealias SwiftType = DataStreamCallback
+extension FfiConverterCallbackInterfaceDataChunkCallback : FfiConverter {
+    typealias SwiftType = DataChunkCallback
     typealias FfiType = UInt64
 
 #if swift(>=5.8)
@@ -4565,15 +4565,15 @@ extension FfiConverterCallbackInterfaceDataStreamCallback : FfiConverter {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public func FfiConverterCallbackInterfaceDataStreamCallback_lift(_ handle: UInt64) throws -> DataStreamCallback {
-    return try FfiConverterCallbackInterfaceDataStreamCallback.lift(handle)
+public func FfiConverterCallbackInterfaceDataChunkCallback_lift(_ handle: UInt64) throws -> DataChunkCallback {
+    return try FfiConverterCallbackInterfaceDataChunkCallback.lift(handle)
 }
 
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public func FfiConverterCallbackInterfaceDataStreamCallback_lower(_ v: DataStreamCallback) -> UInt64 {
-    return FfiConverterCallbackInterfaceDataStreamCallback.lower(v)
+public func FfiConverterCallbackInterfaceDataChunkCallback_lower(_ v: DataChunkCallback) -> UInt64 {
+    return FfiConverterCallbackInterfaceDataChunkCallback.lower(v)
 }
 
 
@@ -6775,13 +6775,13 @@ private let initializationResult: InitializationResult = {
     if (uniffi_actr_checksum_method_contextbridge_register_media_track() != 43039) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_actr_checksum_method_contextbridge_register_stream() != 21623) {
+    if (uniffi_actr_checksum_method_contextbridge_register_stream() != 56804) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_actr_checksum_method_contextbridge_remove_media_track() != 43937) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_actr_checksum_method_contextbridge_send_data_stream() != 33554) {
+    if (uniffi_actr_checksum_method_contextbridge_send_data_chunk() != 60974) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_actr_checksum_method_contextbridge_send_media_sample() != 63657) {
@@ -6793,7 +6793,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_actr_checksum_method_contextbridge_unregister_media_track() != 52187) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_actr_checksum_method_contextbridge_unregister_stream() != 65290) {
+    if (uniffi_actr_checksum_method_contextbridge_unregister_stream() != 31891) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_actr_checksum_method_opusencoder_encode() != 35920) {
@@ -6859,7 +6859,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_actr_checksum_constructor_runtimeobservers_new() != 44140) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_actr_checksum_method_datastreamcallback_on_stream() != 53144) {
+    if (uniffi_actr_checksum_method_datachunkcallback_on_stream() != 33678) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_actr_checksum_method_mediatrackcallback_on_sample() != 56040) {
@@ -6921,7 +6921,7 @@ private let initializationResult: InitializationResult = {
     }
 
     uniffiCallbackInitCredentialObserverBridge()
-    uniffiCallbackInitDataStreamCallback()
+    uniffiCallbackInitDataChunkCallback()
     uniffiCallbackInitLogCallback()
     uniffiCallbackInitMailboxObserverBridge()
     uniffiCallbackInitMediaTrackCallback()

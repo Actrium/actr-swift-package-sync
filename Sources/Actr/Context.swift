@@ -60,11 +60,11 @@ public final class Context: @unchecked Sendable {
         }
     }
 
-    public func registerStream(streamId: String, callback: any DataStreamCallback) async throws {
+    public func registerStream(streamId: String, callback: any DataChunkCallback) async throws {
         do {
             try await bridge.registerStream(
                 streamId: streamId,
-                callback: DataStreamCallbackAdapter(callback)
+                callback: DataChunkCallbackAdapter(callback)
             )
         } catch {
             throw ActrError(error: error)
@@ -79,9 +79,9 @@ public final class Context: @unchecked Sendable {
         }
     }
 
-    public func sendDataStream(target: ActrId, chunk: DataStream, payloadType: PayloadType) async throws {
+    public func sendDataChunk(target: ActrId, chunk: DataChunk, payloadType: PayloadType) async throws {
         do {
-            try await bridge.sendDataStream(
+            try await bridge.sendDataChunk(
                 target: target.bridge,
                 chunk: chunk.bridge,
                 payloadType: payloadType.bridge
