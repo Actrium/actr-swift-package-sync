@@ -89,7 +89,7 @@ jobs:
           source_sha: ${{ inputs.source_sha }}
           source_repository: ${{ inputs.source_repository }}
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@1.88
+        uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
       - name: Cache Rust workspace
