@@ -1,8 +1,8 @@
 {
-  "version": "0.4.18",
+  "version": "0.4.19",
   "source_repository": "https://github.com/Actrium/actr",
-  "source_tag": "v0.4.18",
-  "source_sha": "7e5f94c68e5a6469687b5d03601c9058fd43b2a0",
+  "source_tag": "v0.4.19",
+  "source_sha": "28ca41d38ccb6423fc026027ef2d42274d3b830f",
   "target_branch": "release-0.4",
-  "generated_at": "2026-07-15T10:21:32.084177+00:00"
+  "generated_at": "2026-07-16T05:46:47.668377+00:00"
 }
