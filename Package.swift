@@ -6,9 +6,9 @@ let env = ProcessInfo.processInfo.environment
 let bindingsPath = env["ACTR_BINDINGS_PATH"] ?? "ActrBindings"
 let overrideBinaryPath = env["ACTR_BINARY_PATH"]
 let localBinaryPath = "ActrFFI.xcframework"
-let releaseTag = env["ACTR_BINARY_TAG"] ?? "v0.5.2"
+let releaseTag = env["ACTR_BINARY_TAG"] ?? "v0.5.3"
 let remoteBinaryURL = "https://github.com/Actrium/actr-swift-package-sync/releases/download/\(releaseTag)/ActrFFI.xcframework.zip"
-let remoteBinaryChecksum = env["ACTR_BINARY_CHECKSUM"] ?? "b211bc6fbf63878f15c3df5fca02acc577952cca6e9418a04b1ac475ab7a1826"
+let remoteBinaryChecksum = env["ACTR_BINARY_CHECKSUM"] ?? "474225f6055179eb20e3c2114c9d6af07dbd69ae3b669674e13273bef5fe61bd"
 
 let manifestDir = URL(fileURLWithPath: #filePath).deletingLastPathComponent().path
 let localBinaryAbsolutePath = URL(fileURLWithPath: localBinaryPath, relativeTo: URL(fileURLWithPath: manifestDir)).path
